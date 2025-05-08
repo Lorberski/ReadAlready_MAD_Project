@@ -13,3 +13,53 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# ========== Android Studio / IntelliJ IDEA ==========
+.idea/                         # Projekt-spezifische IDE-Einstellungen
+*.iml                          # Moduldateien
+
+# ========== Build-Ordner ==========
+.gradle/                       # Gradle-Konfig-Cache
+**/build/                      # Build-Output von App, Libs etc.
+.cxx/                          # NDK/Native C++ Build-Dateien
+
+# ========== Lokale Konfiguration ==========
+local.properties               # Enthält z. B. den Pfad zum Android SDK – nutzerabhängig
+
+# ========== OS-/Editor-Müll ==========
+.DS_Store                      # macOS
+Thumbs.db                      # Windows
+*.swp                          # Vim Swap-Dateien
+*.swo
+
+# ========== APKs/AABs/Binaries ==========
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# ========== Protokolle & temporäre Dateien ==========
+*.log
+*.tmp
+
+# ========== Coverage/Reports/Tests ==========
+/outputs/
+test-results/
+coverage/
+
+# ========== Android Lint / Inspektionen ==========
+lint/intermediates/
+lint/generated/
+
+# ========== Packaging Tools ==========
+captures/                     # Screenshots/Video captures
+output.json                   # Von BundleTool etc.
+
+# ========== Kotlin/Java Build Cache ==========
+.kotlinc/
+buildSrc/.gradle/
+
+# ========== Misc ==========
+*.orig                        # Merge-Konflikt-Reste
+
