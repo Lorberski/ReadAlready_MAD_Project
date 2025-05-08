@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.room.common.jvm)
     ksp(libs.hilt.compiler)
     implementation(libs.gson)
     implementation(libs.room.runtime)
