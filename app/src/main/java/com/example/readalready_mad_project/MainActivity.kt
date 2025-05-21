@@ -53,7 +53,7 @@ fun BottomNavigationBarApp() {
             NavigationBar {
                 val currentRoute = currentRoute(navController)
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.MenuBook, contentDescription = "My Books") },
+                    icon = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "My Books") },
                     label = { Text("My Books") },
                     selected = currentRoute == Navigation.BooksScreen.route,
                     onClick = { navController.navigate(Navigation.BooksScreen.route) {
