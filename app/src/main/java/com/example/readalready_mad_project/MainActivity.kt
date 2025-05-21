@@ -4,15 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,9 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.readalready_mad_project.ui.theme.ReadAlready_MAD_ProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
+import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.MyBooksScreenContent
 
 @AndroidEntryPoint
@@ -61,8 +55,8 @@ fun BottomNavigationBarApp() {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.MenuBook, contentDescription = "My Books") },
                     label = { Text("My Books") },
-                    selected = currentRoute == Navigation.MyBooksScreen.route,
-                    onClick = { navController.navigate(Navigation.MyBooksScreen.route) {
+                    selected = currentRoute == Navigation.BooksScreen.route,
+                    onClick = { navController.navigate(Navigation.BooksScreen.route) {
                         launchSingleTop = true
                         restoreState = true
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -71,8 +65,8 @@ fun BottomNavigationBarApp() {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Search, contentDescription = "Search Books") },
                     label = { Text("Search Books") },
-                    selected = currentRoute == Navigation.SearchBooksScreen.route,
-                    onClick = { navController.navigate(Navigation.SearchBooksScreen.route) {
+                    selected = currentRoute == Navigation.SearchScreen.route,
+                    onClick = { navController.navigate(Navigation.SearchScreen.route) {
                         launchSingleTop = true
                         restoreState = true
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -92,11 +86,11 @@ fun BottomNavigationBarApp() {
         }
     ) { innerPadding ->
 
-        NavHost(navController, startDestination = Navigation.MyBooksScreen.route, Modifier.padding(innerPadding)) {
-            composable(Navigation.MyBooksScreen.route) { /* Home Screen Composable */
+        NavHost(navController, startDestination = Navigation.BooksScreen.route, Modifier.padding(innerPadding)) {
+            composable(Navigation.BooksScreen.route) { /* Home Screen Composable */
                 MyBooksScreenContent()
             }
-            composable(Navigation.SearchBooksScreen.route) { /* Books Screen Composable */ }
+            composable(Navigation.SearchScreen.route) { /* Books Screen Composable */ }
             composable(Navigation.SettingsScreen.route) { /* Settings Screen Composable */ }
         }
     }

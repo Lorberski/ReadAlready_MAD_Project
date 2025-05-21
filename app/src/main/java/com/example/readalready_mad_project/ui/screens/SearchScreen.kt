@@ -1,4 +1,4 @@
 package com.example.readalready_mad_project.ui.screens
 
-class SearchBooksScreen {
+class SearchScreen {
 }
