@@ -4,12 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Database(
     entities = [BookEntity::class],
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class BookDB : RoomDatabase() {
     abstract val bookDao: BookDao // Dao instance so that the DB knows about the Dao
 
@@ -28,5 +37,21 @@ abstract class BookDB : RoomDatabase() {
                         }
                 }
         }
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): BookDB {
+        return BookDB.getDatabase(context)
+    }
+
+    @Provides
+    fun provideBookDao(db: BookDB): BookDao {
+        return db.bookDao
     }
 }

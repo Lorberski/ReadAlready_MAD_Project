@@ -2,14 +2,21 @@ package com.example.readalready_mad_project.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.readalready_mad_project.data.api.ImageLinks
 
-@Entity(tableName = "books")  // Der Name der Tabelle in der Datenbank
+@Entity(tableName = "books")
 data class BookEntity(
-    @PrimaryKey(autoGenerate = true)  // Automatisch eine ID generieren
-    val id: Long = 0,  // Primärschlüssel (wird automatisch generiert)
-    val title: String,  // Titel des Buches
-    val author: String,  // Autor des Buches
-    val imageUrl: String,  // URL des Buchbildes
-    val description: String,  // Beschreibung des Buches
-    val rating: Float  // Bewertung des Buches (z.B. von 1 bis 5)
+    @PrimaryKey(autoGenerate = false)
+    val id: String,
+    val title: String,
+    val authors: List<String>?,
+    val publisher: String?,
+    val publishedDate: String?,
+    val description: String?,
+    val pageCount: Int?,
+    val categories: List<String>?,
+    val averageRating: Double?,
+    val ratingsCount: Int?,
+    val smallThumbnail: String?,
+    val thumbnail: String?
 )

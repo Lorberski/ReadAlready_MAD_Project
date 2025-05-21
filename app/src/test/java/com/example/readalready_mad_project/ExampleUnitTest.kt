@@ -1,5 +1,6 @@
 package com.example.readalready_mad_project
 
+import com.example.readalready_mad_project.data.repository.BookRepository
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -14,4 +15,5 @@ class ExampleUnitTest {
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
+
 }

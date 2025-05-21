@@ -9,27 +9,27 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookDao {
 
-    // Alle Bücher abrufen
+    // get all books
     @Query("SELECT * FROM books")
     fun getAllBooks(): Flow<List<BookEntity>>
 
-    // Ein Buch hinzufügen
+    // get one book
     @Insert
     suspend fun insertBook(book: BookEntity)
 
-    // Mehrere Bücher hinzufügen
+    // add books
     @Insert
     suspend fun insertBooks(books: List<BookEntity>)
 
-    // Ein Buch aktualisieren
+    // update one book
     @Update
     suspend fun updateBook(book: BookEntity)
 
-    // Ein Buch nach ID abrufen
+    // get book from id
     @Query("SELECT * FROM books WHERE id = :bookId")
     suspend fun getBookById(bookId: Long): BookEntity?
 
-    // Ein Buch löschen
+    // delete book
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun deleteBook(bookId: Long)
 }
