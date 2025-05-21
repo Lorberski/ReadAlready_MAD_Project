@@ -5,46 +5,28 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-//@Database(entities = [BookEntity::class], version = 1, exportSchema = false)
-//abstract class AppDatabase : RoomDatabase() {
-//
-//    // Die DAO, die für den Zugriff auf die Tabelle 'books' zuständig ist
-//    abstract fun bookDao(): BookDao
-//
-//    companion object {
-//
-//        // Singleton-Instanz der Datenbank
-//        @Volatile
-//        private var INSTANCE: AppDatabase? = null
-//
-//        // Erstellt Datenbank falls sie noch nicht existiert
-//        fun getDatabase(context: Context): AppDatabase {
-//            return INSTANCE ?: synchronized(this) {
-//                val instance = Room.databaseBuilder(
-//                    context.applicationContext,
-//                    AppDatabase::class.java,
-//                    "already_read_database"
-//                ).build()
-//                INSTANCE = instance
-//                instance
-//            }
-//        }
-//    }
-//}
+@Database(
+    entities = [BookEntity::class],
+    version = 1,
+    exportSchema = false
+)
+abstract class BookDB : RoomDatabase() {
+    abstract val bookDao: BookDao // Dao instance so that the DB knows about the Dao
 
-
-//val db = AppDatabase.getDatabase(context)
-//val bookDao = db.bookDao()
-//
-//// Ein Buch aus der Datenbank abrufen
-//val book = bookDao.getBookById(1)
-//
-//// Ein Buch hinzufügen
-//val newBook = BookEntity(
-//    title = "Das Java Handbuch",
-//    author = "John Doe",
-//    imageUrl = "https://example.com/image.jpg",
-//    description = "Ein umfassendes Buch über Java.",
-//    rating = 4.5f
-//)
-//bookDao.insertBook(newBook)
+    // declare as singleton - companion objects are like static variables in Java
+    companion object {
+        @Volatile // never cache the value of instance
+        private var instance: BookDB? = null
+        fun getDatabase(context: Context): BookDB {
+            return instance
+                ?: synchronized(this) { // wrap in synchronized block to prevent race conditions
+                    Room.databaseBuilder(context, BookDB::class.java, "book_db")
+                        .fallbackToDestructiveMigration() // if schema changes wipe the whole db - there are better migration strategies for production usage
+                        .build() // create an instance of the db
+                        .also {
+                            instance = it // override the instance with newly created db
+                        }
+                }
+        }
+    }
+}
