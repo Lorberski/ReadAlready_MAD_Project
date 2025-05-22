@@ -24,7 +24,7 @@ class BooksViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getBooksFromDb().collect { books ->
+            repository.getBooks("Harry Potter").collect { books ->
                 _state.update { it.copy(allBooks = books, books = applyFilter(books, it.filter))
                 }
             }
