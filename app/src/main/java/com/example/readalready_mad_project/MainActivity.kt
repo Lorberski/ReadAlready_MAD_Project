@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.readalready_mad_project.ui.theme.ReadAlready_MAD_ProjectTheme
+import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
 import com.example.readalready_mad_project.ui.Navigation
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ReadAlready_MAD_ProjectTheme {
+            ReadAlreadyTheme {
                 BottomNavigationBarApp()
             }
         }
@@ -120,7 +120,7 @@ fun currentRoute(navController: NavHostController): String? {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    ReadAlready_MAD_ProjectTheme {
+    ReadAlreadyTheme {
         BottomNavigationBarApp()
     }
 }
