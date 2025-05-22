@@ -24,10 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.readalready_mad_project.ui.theme.ReadAlready_MAD_ProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
 import com.example.readalready_mad_project.ui.Navigation
-import com.example.readalready_mad_project.ui.screens.MyBooksScreenContent
+import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,7 +37,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ReadAlready_MAD_ProjectTheme {
-                    BottomNavigationBarApp()
+                BottomNavigationBarApp()
             }
         }
     }
@@ -53,42 +52,57 @@ fun BottomNavigationBarApp() {
             NavigationBar {
                 val currentRoute = currentRoute(navController)
                 NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "My Books") },
+                    icon = {
+                        Icon(
+                            Icons.AutoMirrored.Filled.MenuBook,
+                            contentDescription = "My Books"
+                        )
+                    },
                     label = { Text("My Books") },
                     selected = currentRoute == Navigation.BooksScreen.route,
-                    onClick = { navController.navigate(Navigation.BooksScreen.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    }}
+                    onClick = {
+                        navController.navigate(Navigation.BooksScreen.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
+                    }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Search, contentDescription = "Search Books") },
                     label = { Text("Search Books") },
                     selected = currentRoute == Navigation.SearchScreen.route,
-                    onClick = { navController.navigate(Navigation.SearchScreen.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    }}
+                    onClick = {
+                        navController.navigate(Navigation.SearchScreen.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
+                    }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                     label = { Text("Settings") },
                     selected = currentRoute == Navigation.SettingsScreen.route,
-                    onClick = { navController.navigate(Navigation.SettingsScreen.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    }}
+                    onClick = {
+                        navController.navigate(Navigation.SettingsScreen.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
+                    }
                 )
             }
         }
     ) { innerPadding ->
 
-        NavHost(navController, startDestination = Navigation.BooksScreen.route, Modifier.padding(innerPadding)) {
+        NavHost(
+            navController,
+            startDestination = Navigation.BooksScreen.route,
+            Modifier.padding(innerPadding)
+        ) {
             composable(Navigation.BooksScreen.route) { /* Home Screen Composable */
-                MyBooksScreenContent()
+                BooksScreenContent()
             }
             composable(Navigation.SearchScreen.route) { /* Books Screen Composable */ }
             composable(Navigation.SettingsScreen.route) { /* Settings Screen Composable */ }

@@ -32,4 +32,7 @@ interface BookDao {
     // delete book
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun deleteBook(bookId: Long)
+
+//    @Query("SELECT * FROM BookEntity")
+//    fun getAllBooksFlow(): Flow<List<BookEntity>>
 }
