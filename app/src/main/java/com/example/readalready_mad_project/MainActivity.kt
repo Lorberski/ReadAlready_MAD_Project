@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
+import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -104,7 +105,9 @@ fun BottomNavigationBarApp() {
             composable(Navigation.BooksScreen.route) { /* Home Screen Composable */
                 BooksScreenContent()
             }
-            composable(Navigation.SearchScreen.route) { /* Books Screen Composable */ }
+            composable(Navigation.SearchScreen.route) { /* Books Screen Composable */
+                SearchScreenContent()
+            }
             composable(Navigation.SettingsScreen.route) { /* Settings Screen Composable */ }
         }
     }

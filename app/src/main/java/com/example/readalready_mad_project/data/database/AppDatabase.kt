@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Database(
     entities = [BookEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

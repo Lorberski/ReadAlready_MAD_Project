@@ -32,7 +32,6 @@ class BookRepository @Inject constructor(
             Log.d("BookRepository", "booksFromApi size: ${booksFromApi.size}")
             Log.d("BookRepository", "example ${booksFromApi[0].thumbnail}")
 
-            bookDao.insertBooks(booksFromApi)
             emit(booksFromApi)
 
         } catch (e: Exception) {
