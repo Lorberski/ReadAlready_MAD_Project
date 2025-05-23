@@ -6,7 +6,6 @@ import com.example.readalready_mad_project.data.api.BookApiService
 import com.example.readalready_mad_project.data.database.BookDao
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.mapper.BookMapper
-import com.example.readalready_mad_project.data.model.Book
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +17,7 @@ class BookRepository @Inject constructor(
     private val bookDao: BookDao,
     private val bookApiService: BookApiService
 ){
-    fun getBooks(query: String): Flow<List<BookEntity>> = flow {
+    fun getBooksFromApi(query: String): Flow<List<BookEntity>> = flow {
         try {
 
             Log.d("BookRepository", "inBookRepository")

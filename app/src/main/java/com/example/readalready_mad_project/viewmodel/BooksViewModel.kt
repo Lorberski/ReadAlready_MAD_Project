@@ -2,7 +2,6 @@ package com.example.readalready_mad_project.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.readalready_mad_project.data.database.BookDao
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.repository.BookRepository
 import com.example.readalready_mad_project.states.BooksState
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
+@HiltViewModel    
 class BooksViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
@@ -24,7 +23,7 @@ class BooksViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getBooks("Harry Potter").collect { books ->
+            repository.getBooksFromDb().collect { books ->
                 _state.update { it.copy(allBooks = books, books = applyFilter(books, it.filter))
                 }
             }
@@ -40,7 +39,7 @@ class BooksViewModel @Inject constructor(
 
     fun fetchBooksFromApi(query: String = "android") {
         viewModelScope.launch {
-            repository.getBooks(query).collect { books ->
+            repository.getBooksFromApi(query).collect { books ->
                 _state.update { it.copy(books = applyFilter(books, state.value.filter)) }
             }
         }

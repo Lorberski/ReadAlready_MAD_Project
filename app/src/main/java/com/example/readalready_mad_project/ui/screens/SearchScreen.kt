@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import com.example.readalready_mad_project.ui.components.BookImage
 import com.example.readalready_mad_project.ui.components.SearchBar
 
 

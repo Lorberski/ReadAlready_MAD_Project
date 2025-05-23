@@ -84,6 +84,8 @@ dependencies {
     implementation(libs.okhttp)
 // OkHttp Logging (for API debugging)
     implementation(libs.okhttp.logging)
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 
 
 }
