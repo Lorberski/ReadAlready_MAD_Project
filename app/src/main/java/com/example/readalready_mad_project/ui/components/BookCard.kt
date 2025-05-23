@@ -1,5 +1,6 @@
 package com.example.readalready_mad_project.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -21,22 +23,30 @@ import coil.compose.AsyncImage
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+
 
 @Composable
 fun BookCard(book: BookEntity) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 12.dp)
-            .heightIn(max = 160.dp),
+            .heightIn(min = 100.dp, max = if (expanded) 3000.dp else 200.dp)
+            .clickable { expanded = !expanded }, // Toggle beim Tippen
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = CardDefaults.shape
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
 
-            BookImage(book.thumbnail ?: "")
+            BookImage(book.thumbnail)
 
-            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+            Column(modifier = Modifier.align(Alignment.Top)) {
                 Text(
                     text = book.title,
                     fontWeight = FontWeight.Bold,
@@ -50,6 +60,30 @@ fun BookCard(book: BookEntity) {
                     text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
                     fontSize = 13.sp
                 )
+
+
+                if (expanded) {
+                    Text(
+                        text = "Publisher: ${book.publisher}",
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "Published: ${book.publishedDate}",
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "Pages: ${book.pageCount}",
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "Description: ${book.description}",
+                        fontSize = 13.sp,
+                    )
+                }
             }
         }
     }

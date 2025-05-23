@@ -26,6 +26,7 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
 import com.example.readalready_mad_project.ui.Navigation
+import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 
@@ -127,3 +128,5 @@ fun GreetingPreview() {
         BottomNavigationBarApp()
     }
 }
+
+
