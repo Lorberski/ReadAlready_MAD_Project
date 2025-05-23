@@ -56,7 +56,8 @@ fun BookCard(book: BookEntity) {
 }
 
 @Composable
-fun BookImage(imageUrl: String) {
+fun BookImage(imageUrl: String?) {
+
     val secureUrl = imageUrl?.replace("http://", "https://")
     AsyncImage(
         model = secureUrl,

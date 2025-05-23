@@ -21,8 +21,8 @@ object BookMapper {
                 categories = item.volumeInfo?.categories ?: emptyList(),
                 averageRating = item.volumeInfo?.averageRating ?: 0.0,
                 ratingsCount = item.volumeInfo?.ratingsCount ?: 0,
-                smallThumbnail = item.volumeInfo?.imageLinks?.smallThumbnail ?: "No Data",
-                thumbnail = item.volumeInfo?.imageLinks?.thumbnail ?: "No Data",
+                smallThumbnail = item.volumeInfo?.imageLinks?.smallThumbnail ?: "https://books.google.at/googlebooks/images/no_cover_thumb.gif",
+                thumbnail = item.volumeInfo?.imageLinks?.thumbnail ?: "https://books.google.at/googlebooks/images/no_cover_thumb.gif",
                 alreadyRead = false,
             )
         }
