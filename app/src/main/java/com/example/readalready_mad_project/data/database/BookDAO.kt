@@ -2,6 +2,7 @@ package com.example.readalready_mad_project.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -13,8 +14,8 @@ interface BookDao {
     @Query("SELECT * FROM books")
     fun getAllBooks(): Flow<List<BookEntity>>
 
-    // get one book
-    @Insert
+    // add book
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertBook(book: BookEntity)
 
     // add books
