@@ -56,6 +56,7 @@ fun MainContent(
                         book = book,
                         repositoryFunction = {viewModel.deleteBook(book.id)},
                     ){
+                        expandable()
                         withDeleteSymbol()
                     }
                 }

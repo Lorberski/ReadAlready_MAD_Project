@@ -148,21 +148,22 @@ fun BookCard(
                 BookImage(book.thumbnail)
             }
 
-                if (config.showButton && (!config.expandable || expanded)){
-                    Button(
-                        onClick = repositoryFunction,
-                        modifier = Modifier
-                    ) {
-                        Text("Add")
+                if (!config.expandable || expanded){
+                    if (config.showButton){
+                        Button(
+                            onClick = repositoryFunction,
+                            modifier = Modifier
+                        ) {
+                            Text("Add")
+                        }
                     }
+                    if (config.showDeleteSymbol){ IconButton(onClick = { repositoryFunction() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete"
+                        )
+                    }}
                 }
-                if (config.showDeleteSymbol){ IconButton(onClick = { repositoryFunction() }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete"
-                    )
-                }}
-
             }
 
 
