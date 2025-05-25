@@ -50,5 +50,13 @@ class BookRepository @Inject constructor(
             }
     }
 
+    suspend fun addBookToDb(book: BookEntity){
+        bookDao.insertBook(book)
+    }
+
+    suspend fun deleteBookFromDB(bookId: String){
+        bookDao.deleteBook(bookId)
+    }
+
 
 }

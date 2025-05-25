@@ -39,7 +39,8 @@ fun BooksScreenContent() {
 fun MainContent(
     books: List<BookEntity>,
     selectedFilter: FilterOption,
-    onFilterChange: (FilterOption) -> Unit
+    onFilterChange: (FilterOption) -> Unit,
+    viewModel: BooksViewModel = hiltViewModel()
 ) {
     val listState = rememberLazyListState()
 
@@ -51,7 +52,12 @@ fun MainContent(
             )
             LazyColumn(state = listState) {
                 items(books) { book ->
-                    BookCard(book = book)  // Hier wird BookCard verwendet!
+                    BookCard(
+                        book = book,
+                        repositoryFunction = {viewModel.deleteBook(book.id)},
+                    ){
+                        withDeleteSymbol()
+                    }
                 }
             }
         }

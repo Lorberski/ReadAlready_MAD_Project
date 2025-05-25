@@ -3,6 +3,7 @@ package com.example.readalready_mad_project.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.repository.BookRepository
 import com.example.readalready_mad_project.states.BooksState
@@ -31,4 +32,10 @@ class SearchViewmodel @Inject constructor(
             }
         }
         }}
+
+    fun addBook(book: BookEntity){
+        viewModelScope.launch {
+            repository.addBookToDb(book)
+        }
+    }
 }

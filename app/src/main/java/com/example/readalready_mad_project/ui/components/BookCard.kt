@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -29,65 +34,177 @@ import androidx.compose.runtime.setValue
 
 
 
+data class BookCardConfig(
+    val showTitle: Boolean = true,
+    val showAuthors: Boolean = true,
+    val showPublisher: Boolean = false,
+    val showPublishedDate: Boolean = false,
+    val showPageCount: Boolean = false,
+    val showRating: Boolean = false,
+    val showDescription: Boolean = false,
+    val showImage: Boolean = true,
+    val expandable: Boolean = true,
+    val showStatus: Boolean = false,
+    val showButton: Boolean = false,
+    val showDeleteSymbol: Boolean = false,
+)
+
+class BookCardConfigBuilder {
+    private var showTitle = true
+    private var showAuthors = true
+    private var showPublisher = false
+    private var showPublishedDate = false
+    private var showPageCount = false
+    private var showRating = false
+    private var showDescription = false
+    private var showImage = true
+    private var expandable = true
+    private var showStatus = false
+    private var showButton = false
+    private var showDeleteSymbol = false
+
+    fun withTitle() = apply { showTitle = true }
+    fun withoutTitle() = apply { showTitle = false }
+
+    fun withAuthors() = apply { showAuthors = true }
+    fun withoutAuthors() = apply { showAuthors = false }
+
+    fun withPublisher() = apply { showPublisher = true }
+    fun withoutPublisher() = apply { showPublisher = false }
+
+    fun withPublishedDate() = apply { showPublishedDate = true }
+    fun withoutPublishedDate() = apply { showPublishedDate = false }
+
+    fun withPageCount() = apply { showPageCount = true }
+    fun withoutPageCount() = apply { showPageCount = false }
+
+    fun withRating() = apply { showRating = true }
+    fun withoutRating() = apply { showRating = false }
+
+    fun withDescription() = apply { showDescription = true }
+    fun withoutDescription() = apply { showDescription = false }
+
+    fun withImage() = apply { showImage = true }
+    fun withoutImage() = apply { showImage = false }
+
+    fun expandable() = apply { expandable = true }
+    fun notExpandable() = apply { expandable = false }
+
+    fun withStatus() = apply {showStatus = true}
+    fun withoutStatus() = apply {showStatus = false}
+
+    fun withButton() = apply {showButton = true}
+    fun withoutAddSymbol() = apply {showButton = false}
+
+    fun withDeleteSymbol() = apply { showDeleteSymbol = true }
+    fun withoutDeleteSymbol() = apply { showDeleteSymbol = false }
+
+    fun build(): BookCardConfig {
+        return BookCardConfig(
+            showTitle,
+            showAuthors,
+            showPublisher,
+            showPublishedDate,
+            showPageCount,
+            showRating,
+            showDescription,
+            showImage,
+            expandable,
+            showStatus,
+            showButton,
+            showDeleteSymbol,
+
+        )
+    }
+}
+
+
 @Composable
-fun BookCard(book: BookEntity) {
+fun BookCard(
+    book: BookEntity,
+    modifier: Modifier = Modifier,
+    repositoryFunction: () -> Unit,
+    configBuilder: (BookCardConfigBuilder.() -> Unit)? = null
+
+) {
+    val config = remember(configBuilder) {
+        BookCardConfigBuilder().apply { configBuilder?.invoke(this) }.build()
+    }
+
     var expanded by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 12.dp)
-            .heightIn(min = 100.dp, max = if (expanded) 3000.dp else 200.dp)
-            .clickable { expanded = !expanded }, // Toggle beim Tippen
+            .heightIn(min = 100.dp, max = if (config.expandable && expanded) 3000.dp else 200.dp)
+            .clickable(enabled = config.expandable) { expanded = !expanded },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = CardDefaults.shape
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
 
-            BookImage(book.thumbnail)
+            Column {  if (config.showImage) {
+                BookImage(book.thumbnail)
+            }
+
+                if (config.showButton && (!config.expandable || expanded)){
+                    Button(
+                        onClick = repositoryFunction,
+                        modifier = Modifier
+                    ) {
+                        Text("Add")
+                    }
+                }
+                if (config.showDeleteSymbol){ IconButton(onClick = { repositoryFunction() }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete"
+                    )
+                }}
+
+            }
+
 
             Column(modifier = Modifier.align(Alignment.Top)) {
-                Text(
-                    text = book.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Text(
-                    text = "Author: ${book.authors?.joinToString(", ")}",
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
-                    fontSize = 13.sp
-                )
-
-
-                if (expanded) {
+                if (config.showTitle) {
+                    Text(book.title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+                if (config.showAuthors) {
+                    Text("Author: ${book.authors?.joinToString(", ")}", fontSize = 14.sp)
+                }
+                if (config.showStatus) {
                     Text(
-                        text = "Publisher: ${book.publisher}",
+                        text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
                         fontSize = 13.sp
                     )
-                    Text(
-                        text = "Published: ${book.publishedDate}",
-                        fontSize = 13.sp
-                    )
-                    Text(
-                        text = "Pages: ${book.pageCount}",
-                        fontSize = 13.sp
-                    )
-                    Text(
-                        text = "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
-                        fontSize = 13.sp
-                    )
-                    Text(
-                        text = "Description: ${book.description}",
-                        fontSize = 13.sp,
-                    )
+                }
+                if (!config.expandable || expanded) {
+                    if (config.showPublisher) {
+                        Text("Publisher: ${book.publisher}", fontSize = 13.sp)
+                    }
+                    if (config.showPublishedDate) {
+                        Text("Published: ${book.publishedDate}", fontSize = 13.sp)
+                    }
+                    if (config.showPageCount) {
+                        Text("Pages: ${book.pageCount}", fontSize = 13.sp)
+                    }
+                    if (config.showRating) {
+                        Text(
+                            "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
+                            fontSize = 13.sp
+                        )
+                    }
+                    if (config.showDescription) {
+                        Text("Description: ${book.description}", fontSize = 13.sp)
+                    }
                 }
             }
         }
     }
 }
+
+
 
 @Composable
 fun BookImage(imageUrl: String?) {
@@ -106,20 +223,23 @@ fun BookImage(imageUrl: String?) {
 @Composable
 fun BookCardPreview() {
     ReadAlreadyTheme {
-        BookCard(BookEntity(
-            id = "",
-            title = "Example Book",
-            authors = emptyList(),
-            publisher = "Publisher",
-            publishedDate = "1.1.1999",
-            description = "Some Text",
-            pageCount = 5,
-            categories = emptyList(),
-            averageRating = 0.0,
-            ratingsCount = 0,
-            smallThumbnail = "TODO()",
-            thumbnail = "TODO()",
-            alreadyRead = false
-        ))
+        BookCard(
+            BookEntity(
+                id = "",
+                title = "Example Book",
+                authors = emptyList(),
+                publisher = "Publisher",
+                publishedDate = "1.1.1999",
+                description = "Some Text",
+                pageCount = 5,
+                categories = emptyList(),
+                averageRating = 0.0,
+                ratingsCount = 0,
+                smallThumbnail = "TODO()",
+                thumbnail = "TODO()",
+                alreadyRead = false
+            ),
+            repositoryFunction = {println("addFunction")},
+        )
     }
 }

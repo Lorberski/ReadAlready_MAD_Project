@@ -45,6 +45,12 @@ class BooksViewModel @Inject constructor(
         }
     }
 
+    fun deleteBook(bookId: String){
+        viewModelScope.launch {
+        repository.deleteBookFromDB(bookId)
+        }
+    }
+
 
     private fun applyFilter(books: List<BookEntity>, filter: FilterOption): List<BookEntity> {
         return when (filter) {
