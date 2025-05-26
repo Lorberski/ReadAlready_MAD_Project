@@ -124,7 +124,9 @@ fun BookCard(
     book: BookEntity,
     modifier: Modifier = Modifier,
     repositoryFunction: () -> Unit,
+    onClick: (() -> Unit)? = null,
     configBuilder: (BookCardConfigBuilder.() -> Unit)? = null
+
 
 ) {
     val config = remember(configBuilder) {
@@ -138,8 +140,13 @@ fun BookCard(
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 12.dp)
             .heightIn(min = 100.dp, max = if (config.expandable && expanded) 3000.dp else 200.dp)
-            .clickable(enabled = config.expandable) { expanded = !expanded },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            .clickable(enabled = config.expandable) {
+                onClick?.invoke() ?: run {
+                    expanded = !expanded
+                }
+            },
+
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = CardDefaults.shape
     ) {
         Row(modifier = Modifier.padding(12.dp)) {

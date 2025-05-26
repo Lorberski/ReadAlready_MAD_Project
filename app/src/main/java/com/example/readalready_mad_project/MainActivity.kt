@@ -25,8 +25,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
+import androidx.navigation.NavController
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.components.BookCard
+import com.example.readalready_mad_project.ui.screens.BookDetailScreen
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 
@@ -103,14 +105,24 @@ fun BottomNavigationBarApp() {
             startDestination = Navigation.BooksScreen.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(Navigation.BooksScreen.route) { /* Home Screen Composable */
-                BooksScreenContent()
+            composable(Navigation.BooksScreen.route) {
+                BooksScreenContent(navController)
             }
-            composable(Navigation.SearchScreen.route) { /* Books Screen Composable */
+            composable(Navigation.SearchScreen.route) {
                 SearchScreenContent()
             }
-            composable(Navigation.SettingsScreen.route) { /* Settings Screen Composable */ }
+            composable(Navigation.SettingsScreen.route) {
+                /* TODO: SettingsScreen() */
+            }
+            composable("book_detail/{bookId}") { backStackEntry ->
+                val bookId = backStackEntry.arguments?.getString("bookId")
+                if (bookId != null) {
+                    BookDetailScreen(bookId = bookId, navController = navController)
+                }
+            }
+
         }
+
     }
 }
 

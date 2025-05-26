@@ -34,6 +34,10 @@ interface BookDao {
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun deleteBook(bookId: String)
 
+    @Query("SELECT * FROM books WHERE id = :bookId LIMIT 1")
+    suspend fun getBookById(bookId: String): BookEntity?
+
+
 //    @Query("SELECT * FROM BookEntity")
 //    fun getAllBooksFlow(): Flow<List<BookEntity>>
 }

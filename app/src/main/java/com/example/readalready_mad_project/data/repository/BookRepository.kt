@@ -50,6 +50,10 @@ class BookRepository @Inject constructor(
             }
     }
 
+    suspend fun getBookById(bookId: String): BookEntity? {
+        return bookDao.getBookById(bookId)
+    }
+
     suspend fun addBookToDb(book: BookEntity){
         bookDao.insertBook(book)
     }

@@ -22,24 +22,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.navigation.NavHostController
 
 @Composable
-fun BooksScreenContent() {
+fun BooksScreenContent(navController: NavHostController) {
     val viewModel: BooksViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     MainContent(
         books = state.books,
         selectedFilter = state.filter,
-        onFilterChange = viewModel::onFilterChanged
+        onFilterChange = viewModel::onFilterChanged,
+        onBookClick = { bookId ->
+            navController.navigate("book_detail/$bookId")
+        }
     )
 }
+
 
 @Composable
 fun MainContent(
     books: List<BookEntity>,
     selectedFilter: FilterOption,
     onFilterChange: (FilterOption) -> Unit,
+    onBookClick: (String) -> Unit,
     viewModel: BooksViewModel = hiltViewModel()
 ) {
     val listState = rememberLazyListState()
@@ -54,10 +60,11 @@ fun MainContent(
                 items(books) { book ->
                     BookCard(
                         book = book,
-                        repositoryFunction = {viewModel.deleteBook(book.id)},
+                        repositoryFunction = { viewModel.deleteBook(book.id) },
+                        onClick = { onBookClick(book.id) }
                     ){
-                        expandable()
                         withDeleteSymbol()
+                        withStatus()
                     }
                 }
             }
