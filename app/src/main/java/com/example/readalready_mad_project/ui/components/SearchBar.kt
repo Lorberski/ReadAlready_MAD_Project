@@ -51,18 +51,6 @@ fun SearchBar(
                     )
                 }
         },
-        trailingIcon = {
-            IconButton(
-                onClick = { println("filter Button") },
-                modifier = Modifier.size(36.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FilterList,
-                    contentDescription = "Filter",
-                    modifier = Modifier.padding(0.dp)
-                )
-            }
-    },
         placeholder = {
             Text(text = placeholder)
         },

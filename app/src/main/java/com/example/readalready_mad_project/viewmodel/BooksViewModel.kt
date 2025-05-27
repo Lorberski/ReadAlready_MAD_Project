@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.repository.BookRepository
 import com.example.readalready_mad_project.states.BooksState
-import com.example.readalready_mad_project.states.FilterOption
+import com.example.readalready_mad_project.states.FilterOptionBookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import  javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    fun onFilterChanged(newFilter: FilterOption) {
+    fun onFilterChanged(newFilter: FilterOptionBookState) {
         _state.update {
             val filtered = applyFilter(it.allBooks, newFilter)
             it.copy(filter = newFilter, books = filtered)
@@ -45,13 +45,13 @@ class BooksViewModel @Inject constructor(
     }
 
 
-    private fun applyFilter(books: List<BookEntity>, filter: FilterOption): List<BookEntity> {
+    private fun applyFilter(books: List<BookEntity>, filter: FilterOptionBookState): List<BookEntity> {
         return when (filter) {
-            FilterOption.AlreadyRead -> books.filter { it.alreadyRead }
-            FilterOption.NotRead -> books.filter { !it.alreadyRead }
-            FilterOption.Author -> books.sortedBy { it.authors?.firstOrNull() ?: "" }
-            FilterOption.Title -> books.sortedBy { it.title }
-            FilterOption.All -> books
+            FilterOptionBookState.AlreadyRead -> books.filter { it.alreadyRead }
+            FilterOptionBookState.NotRead -> books.filter { !it.alreadyRead }
+            FilterOptionBookState.Author -> books.sortedBy { it.authors?.firstOrNull() ?: "" }
+            FilterOptionBookState.Title -> books.sortedBy { it.title }
+            FilterOptionBookState.All -> books
         }
     }
 }

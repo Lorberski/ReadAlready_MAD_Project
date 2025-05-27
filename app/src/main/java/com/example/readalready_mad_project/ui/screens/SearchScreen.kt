@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.readalready_mad_project.data.database.BookEntity
+import com.example.readalready_mad_project.states.FilterOptionSearchState
 import com.example.readalready_mad_project.ui.components.BookCard
+import com.example.readalready_mad_project.ui.components.FilterBar
 import com.example.readalready_mad_project.ui.components.SearchBar
 import com.example.readalready_mad_project.viewmodel.SearchViewmodel
 import kotlinx.coroutines.launch
@@ -28,9 +30,15 @@ fun SearchScreenContent(){
             query = searchQuery,
             onQueryChange = { searchQuery = it },
             onSearchTriggered = { viewModel.searchForBooks(searchQuery) })
+        FilterBar(
+            selected = state.filter,
+            onFilterSelected = viewModel::onSearchFilterChanged,
+            options = FilterOptionSearchState.entries.toTypedArray()
+        )
         SearchMainContent(
             books = state.allBooks
-        ) }
+        )
+    }
 }
 
 
@@ -40,7 +48,7 @@ fun SearchMainContent(
     viewmodel: SearchViewmodel = hiltViewModel()
 ) {
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
+
 
     Row(modifier = Modifier.fillMaxSize()) {
 

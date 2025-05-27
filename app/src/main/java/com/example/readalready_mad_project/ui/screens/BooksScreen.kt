@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.readalready_mad_project.data.database.BookEntity
-import com.example.readalready_mad_project.states.FilterOption
+import com.example.readalready_mad_project.states.FilterOptionBookState
 import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.viewmodel.BooksViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.navigation.NavHostController
+import com.example.readalready_mad_project.ui.components.FilterBar
 
 @Composable
 fun BooksScreenContent(navController: NavHostController) {
@@ -43,8 +44,8 @@ fun BooksScreenContent(navController: NavHostController) {
 @Composable
 fun MainContent(
     books: List<BookEntity>,
-    selectedFilter: FilterOption,
-    onFilterChange: (FilterOption) -> Unit,
+    selectedFilter: FilterOptionBookState,
+    onFilterChange: (FilterOptionBookState) -> Unit,
     onBookClick: (String) -> Unit,
     viewModel: BooksViewModel = hiltViewModel()
 ) {
@@ -52,10 +53,11 @@ fun MainContent(
 
     Row(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.weight(1f)) {
-            FilterBar(
-                selected = selectedFilter,
-                onFilterSelected = onFilterChange
-            )
+        FilterBar(
+            selected = selectedFilter,
+            onFilterSelected = onFilterChange,
+            options = FilterOptionBookState.entries.toTypedArray()
+        )
             LazyColumn(state = listState) {
                 items(books) { book ->
                     BookCard(
@@ -84,34 +86,6 @@ fun MainContent(
                     }
                 }
             )
-        }
-    }
-}
-
-@Composable
-fun FilterBar(
-    selected: FilterOption,
-    onFilterSelected: (FilterOption) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(modifier = Modifier.padding(8.dp)) {
-        Button(onClick = { expanded = true }) {
-            Text("Filter: ${selected.label}")
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            FilterOption.values().forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option.label) },
-                    onClick = {
-                        onFilterSelected(option)
-                        expanded = false
-                    }
-                )
-            }
         }
     }
 }
