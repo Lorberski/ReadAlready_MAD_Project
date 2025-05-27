@@ -17,13 +17,28 @@ class BookRepository @Inject constructor(
     private val bookDao: BookDao,
     private val bookApiService: BookApiService
 ){
-    fun getBooksFromApi(query: String): Flow<List<BookEntity>> = flow {
+    fun getBooksFromApi(title: String? = null, author: String? = null, isbn: String? = null):
+            Flow<List<BookEntity>> = flow {
         try {
+            val queryParts = mutableListOf<String>()
 
+            author?.takeIf { it.isNotBlank() }?.let {
+                queryParts.add("inauthor:$it")
+            }
+
+            title?.takeIf { it.isNotBlank() }?.let {
+                queryParts.add("intitle:$it")
+            }
+
+            isbn?.takeIf { it.isNotBlank() }?.let {
+                queryParts.add("isbn:$it")
+            }
+
+            val finalQuery = queryParts.joinToString("+")
             Log.d("BookRepository", "inBookRepository")
 
             val response = bookApiService.getBooks(
-                query = query,
+                query = finalQuery,
                 maxResults = MAX_RESULTS
             )
 
@@ -38,6 +53,8 @@ class BookRepository @Inject constructor(
             emit(emptyList())
         }
     }
+
+
 
     fun getBooksFromDb(): Flow<List<BookEntity>> {
         return bookDao.getAllBooks()

@@ -24,14 +24,19 @@ class SearchViewmodel @Inject constructor(
     private val _state = MutableStateFlow(SearchState())
     val state = _state.asStateFlow()
 
-    fun searchForBooks(query: String){
-        if (query.isNotEmpty()){viewModelScope.launch {
-            repository.getBooksFromApi(query).collect { books ->
+    fun searchForBooks(title: String? = null, author: String? = null, isbn: String? = null){
+        viewModelScope.launch {
+            repository.getBooksFromApi(
+                title = title,
+                author = author,
+                isbn = isbn
+
+            ).collect { books ->
                 _state.update { it.copy(allBooks = books)
                 }
             }
         }
-        }}
+        }
 
     fun addBook(book: BookEntity){
         viewModelScope.launch {

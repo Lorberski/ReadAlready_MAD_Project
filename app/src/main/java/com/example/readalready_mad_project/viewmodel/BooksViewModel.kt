@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel    
 class BooksViewModel @Inject constructor(
     private val repository: BookRepository
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _state = MutableStateFlow(BooksState())
     val state = _state.asStateFlow()
@@ -37,13 +37,6 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    fun fetchBooksFromApi(query: String = "android") {
-        viewModelScope.launch {
-            repository.getBooksFromApi(query).collect { books ->
-                _state.update { it.copy(books = applyFilter(books, state.value.filter)) }
-            }
-        }
-    }
 
     fun deleteBook(bookId: String){
         viewModelScope.launch {

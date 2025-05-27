@@ -1,13 +1,18 @@
 package com.example.readalready_mad_project.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,11 +40,29 @@ fun SearchBar(
             .fillMaxWidth()
             .padding(16.dp),
         leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon"
-            )
+                IconButton(
+                    onClick = onSearchTriggered,
+                    modifier = Modifier.size(36.dp) // oder kleiner z.B. 32.dp
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Icon",
+                        modifier = Modifier.padding(0.dp) // Kein zusätzliches Padding
+                    )
+                }
         },
+        trailingIcon = {
+            IconButton(
+                onClick = { println("filter Button") },
+                modifier = Modifier.size(36.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.FilterList,
+                    contentDescription = "Filter",
+                    modifier = Modifier.padding(0.dp)
+                )
+            }
+    },
         placeholder = {
             Text(text = placeholder)
         },
