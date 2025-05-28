@@ -38,12 +38,14 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
+
     fun toggleReadStatus() {
         val currentBook = _state.value.book
         if (currentBook != null) {
             val updateBook = currentBook.copy(alreadyRead = !currentBook.alreadyRead)
+            _state.update { it.copy(book = updateBook) }
             viewModelScope.launch {
-                repository.toggleBookStatusInDB(updateBook)
+                repository.updateBookInDb(updateBook)
             }
         }
     }

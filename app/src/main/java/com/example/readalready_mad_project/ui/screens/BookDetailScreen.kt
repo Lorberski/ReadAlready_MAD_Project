@@ -19,7 +19,6 @@ fun BookDetailScreen(bookId: String, navController: NavHostController) {
     val viewModel: BookDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
-    // Lade das Buch basierend auf der ID
     LaunchedEffect(bookId) {
         viewModel.loadBook(bookId)
     }

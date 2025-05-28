@@ -79,7 +79,7 @@ class BookRepository @Inject constructor(
         bookDao.deleteBook(bookId)
     }
 
-    suspend fun toggleBookStatusInDB(book: BookEntity){
+    suspend fun updateBookInDb(book: BookEntity){
         bookDao.updateBook(book)
     }
 
