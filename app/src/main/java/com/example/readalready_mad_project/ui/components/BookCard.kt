@@ -24,6 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.foundation.layout.Arrangement
+
+
 
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
@@ -31,7 +36,6 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-
 
 
 data class BookCardConfig(
@@ -92,11 +96,11 @@ class BookCardConfigBuilder {
     fun expandable() = apply { expandable = true }
     fun notExpandable() = apply { expandable = false }
 
-    fun withStatus() = apply {showStatus = true}
-    fun withoutStatus() = apply {showStatus = false}
+    fun withStatus() = apply { showStatus = true }
+    fun withoutStatus() = apply { showStatus = false }
 
-    fun withAddButton() = apply {showAddButton = true}
-    fun withoutAddButton() = apply {showAddButton = false}
+    fun withAddButton() = apply { showAddButton = true }
+    fun withoutAddButton() = apply { showAddButton = false }
 
     fun withDeleteSymbol() = apply { showDeleteSymbol = true }
     fun withoutDeleteSymbol() = apply { showDeleteSymbol = false }
@@ -120,7 +124,7 @@ class BookCardConfigBuilder {
             showDeleteSymbol,
             showAlreadyReadButton,
 
-        )
+            )
     }
 }
 
@@ -154,17 +158,18 @@ fun BookCard(
                 }
             },
 
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = CardDefaults.shape
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
 
-            Column {  if (config.showImage) {
-                BookImage(book.thumbnail)
-            }
+            Column {
+                if (config.showImage) {
+                    BookImage(book.thumbnail)
+                }
 
-                if (!config.expandable || expanded){
-                    if (config.showAddButton){
+                if (!config.expandable || expanded) {
+                    if (config.showAddButton) {
                         if (repositoryAddFunction != null) {
                             Button(
                                 onClick = repositoryAddFunction,
@@ -175,27 +180,19 @@ fun BookCard(
                         }
                     }
 
-                    if (config.showAlreadyReadButton){
-                        if (repositoryToggleFunction != null) {
-                            Button(
-                                onClick = repositoryToggleFunction,
-                                modifier = Modifier
-                            ) {
-                                Text("Read/Unread")
+
+                    if (config.showDeleteSymbol) {
+                        IconButton(onClick = {
+                            if (repositoryDeleteFunction != null) {
+                                repositoryDeleteFunction()
                             }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Delete"
+                            )
                         }
                     }
-
-                    if (config.showDeleteSymbol){ IconButton(onClick = {
-                        if (repositoryDeleteFunction != null) {
-                            repositoryDeleteFunction()
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete"
-                        )
-                    }}
                 }
             }
 
@@ -207,12 +204,38 @@ fun BookCard(
                 if (config.showAuthors) {
                     Text("Author: ${book.authors?.joinToString(", ")}", fontSize = 14.sp)
                 }
-                if (config.showStatus) {
-                    Text(
-                        text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
-                        fontSize = 13.sp
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (config.showStatus) {
+                        Text(
+                            text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
+                            fontSize = 13.sp
+                        )
+                    }
+
+                    if (config.showAlreadyReadButton) {
+                        if (repositoryToggleFunction != null) {
+                            IconButton(
+                                onClick = repositoryToggleFunction,
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (book.alreadyRead)
+                                        Icons.Default.MenuBook
+                                    else
+                                        Icons.Default.Book,
+                                    contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
+                                )
+                            }
+                        }
+                    }
                 }
+
                 if (!config.expandable || expanded) {
                     if (config.showPublisher) {
                         Text("Publisher: ${book.publisher}", fontSize = 13.sp)
@@ -237,7 +260,6 @@ fun BookCard(
         }
     }
 }
-
 
 
 @Composable
@@ -273,7 +295,7 @@ fun BookCardPreview() {
                 thumbnail = "TODO()",
                 alreadyRead = false
             ),
-            repositoryAddFunction = {println("addFunction")},
+            repositoryAddFunction = { println("addFunction") },
         )
     }
 }
