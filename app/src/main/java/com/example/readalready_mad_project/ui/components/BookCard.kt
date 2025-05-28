@@ -123,6 +123,7 @@ class BookCardConfigBuilder {
         showDescriptionButton = true
         descriptionToggleClick = onClick
     }
+
     fun withoutDescriptionButton() = apply { showDescriptionButton = false }
 
     fun build(): BookCardConfig {
@@ -142,7 +143,7 @@ class BookCardConfigBuilder {
             showAlreadyReadButton,
             showNotesButton,
             showDescriptionButton,
-                    descriptionToggleClick
+            descriptionToggleClick
         )
     }
 }
@@ -217,26 +218,27 @@ fun BookCard(
                         fontSize = 13.sp
                     )
                 }
-            }
 
-            if (!config.expandable || expanded) {
-                if (config.showPublisher) {
-                    Text("Publisher: ${book.publisher}", fontSize = 13.sp)
-                }
-                if (config.showPublishedDate) {
-                    Text("Published: ${book.publishedDate}", fontSize = 13.sp)
-                }
-                if (config.showPageCount) {
-                    Text("Pages: ${book.pageCount}", fontSize = 13.sp)
-                }
-                if (config.showRating) {
-                    Text(
-                        "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
-                        fontSize = 13.sp
-                    )
-                }
-                if (config.showDescription) {
-                    Text("Description: ${book.description}", fontSize = 13.sp)
+
+                if (!config.expandable || expanded) {
+                    if (config.showPublisher) {
+                        Text("Publisher: ${book.publisher}", fontSize = 13.sp)
+                    }
+                    if (config.showPublishedDate) {
+                        Text("Published: ${book.publishedDate}", fontSize = 13.sp)
+                    }
+                    if (config.showPageCount) {
+                        Text("Pages: ${book.pageCount}", fontSize = 13.sp)
+                    }
+                    if (config.showRating) {
+                        Text(
+                            "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
+                            fontSize = 13.sp
+                        )
+                    }
+                    if (config.showDescription && !config.showDescriptionButton) {
+                        Text("Description: ${book.description}", fontSize = 13.sp)
+                    }
                 }
             }
         }
