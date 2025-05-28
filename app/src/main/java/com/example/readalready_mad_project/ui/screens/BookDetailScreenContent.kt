@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -23,6 +24,9 @@ fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
     val viewModel: BookDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     val showDescription by viewModel.showDescription.collectAsState()
+    val showNotesEditor by viewModel.showNotesEditor.collectAsState()
+    val notesInput by viewModel.notesInput.collectAsState()
+
 
     LaunchedEffect(bookId) {
         viewModel.loadBook(bookId)
@@ -33,6 +37,8 @@ fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
         state = state,
         showDescription = showDescription,
         onToggleDescription = { viewModel.toggleDescriptionVisibility() },
+        showNotesEditor = showNotesEditor,
+        notesInput = notesInput,
         onBackButton = {
             navController.navigate(Navigation.BooksScreen.route)
         },
@@ -46,6 +52,8 @@ fun MainContent(
     state: BookDetailState,
     showDescription: Boolean,
     onToggleDescription: () -> Unit,
+    showNotesEditor: Boolean,
+    notesInput: String,
     onBackButton: () -> Unit
 ) {
     val viewModel: BookDetailViewModel = hiltViewModel()
@@ -92,6 +100,7 @@ fun MainContent(
                                 navController.popBackStack()
                             },
                             repositoryReadToggleFunction = { viewModel.toggleReadStatus() },
+                            repositoryNotesToggleFunction = { viewModel.toggleNotesEditor() },
                             onClick = null,
                             configBuilder = {
                                 notExpandable()
@@ -113,6 +122,37 @@ fun MainContent(
                                 )
                             }
                         }
+                        if (showNotesEditor) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text("Notizen bearbeiten", fontWeight = FontWeight.Bold)
+
+                                    OutlinedTextField(
+                                        value = notesInput,
+                                        onValueChange = { viewModel.onNotesChanged(it) },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(120.dp),
+                                        placeholder = { Text("Gib deine Notizen hier ein") }
+                                    )
+
+                                    Row(
+                                        horizontalArrangement = Arrangement.End,
+                                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                                    ) {
+                                        Button(onClick = { viewModel.saveNotes() }) {
+                                            Text("Speichern")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }

@@ -24,10 +24,38 @@ class BookDetailViewModel @Inject constructor(
     private val _showDescription = MutableStateFlow(false)
     val showDescription: StateFlow<Boolean> = _showDescription
 
+    private val _showNotesEditor = MutableStateFlow(false)
+    val showNotesEditor: StateFlow<Boolean> = _showNotesEditor
+
+    private val _notesInput = MutableStateFlow("")
+    val notesInput: StateFlow<String> = _notesInput
+
     init {
         val bookId = savedStateHandle.get<String>("bookId")
         bookId?.let { loadBook(it) }
     }
+
+    fun toggleNotesEditor() {
+        _showNotesEditor.value = !_showNotesEditor.value
+        _notesInput.value = _state.value.book?.notes.orEmpty()
+    }
+
+    fun onNotesChanged(newValue: String) {
+        _notesInput.value = newValue
+    }
+
+    fun saveNotes() {
+        val currentBook = _state.value.book
+        if (currentBook != null) {
+            val updatedBook = currentBook.copy(notes = _notesInput.value)
+            _state.update { it.copy(book = updatedBook) }
+            viewModelScope.launch {
+                repository.updateBookInDb(updatedBook)
+            }
+            _showNotesEditor.value = false
+        }
+    }
+
 
     fun loadBook(bookId: String) {
         viewModelScope.launch {

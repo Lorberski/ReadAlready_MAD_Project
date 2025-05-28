@@ -19,5 +19,6 @@ data class BookEntity(
     val ratingsCount: Int?,
     val smallThumbnail: String?,
     val thumbnail: String?,
-    val alreadyRead: Boolean
+    val alreadyRead: Boolean,
+    val notes: String? = null
 )
