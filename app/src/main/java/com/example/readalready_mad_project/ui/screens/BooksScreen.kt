@@ -63,7 +63,6 @@ fun MainContent(
                         repositoryAddFunction = { viewModel.deleteBook(book.id) },
                         onClick = { onBookClick(book.id) }
                     ){
-                        withDeleteSymbol()
                         withStatus()
                     }
                 }
