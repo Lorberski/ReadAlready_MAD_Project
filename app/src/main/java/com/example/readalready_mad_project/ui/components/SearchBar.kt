@@ -42,12 +42,12 @@ fun SearchBar(
         leadingIcon = {
                 IconButton(
                     onClick = onSearchTriggered,
-                    modifier = Modifier.size(36.dp) // oder kleiner z.B. 32.dp
+                    modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Search Icon",
-                        modifier = Modifier.padding(0.dp) // Kein zusätzliches Padding
+                        modifier = Modifier.padding(0.dp)
                     )
                 }
         },

@@ -1,3 +1,15 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+} else {
+    throw GradleException("local.properties file not found!")
+}
+
+val MY_API_KEY = localProperties.getProperty("MY_API_KEY") ?: throw GradleException("MY_API_KEY not found in local.properties")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,7 +20,13 @@ plugins {
 
 }
 
+
+
+
 android {
+
+
+
     namespace = "com.example.readalready_mad_project"
     compileSdk = 35
 
@@ -18,7 +36,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "MY_API_KEY", "\"$MY_API_KEY\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

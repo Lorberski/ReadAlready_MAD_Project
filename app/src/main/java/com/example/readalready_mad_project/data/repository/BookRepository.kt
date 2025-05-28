@@ -11,11 +11,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 
+
 const val MAX_RESULTS = 20
 
 class BookRepository @Inject constructor(
     private val bookDao: BookDao,
-    private val bookApiService: BookApiService
+    private val bookApiService: BookApiService,
 ){
     fun getBooksFromApi(title: String? = null, author: String? = null, isbn: String? = null):
             Flow<List<BookEntity>> = flow {
@@ -66,6 +67,7 @@ class BookRepository @Inject constructor(
                 }
             }
     }
+
 
     suspend fun getBookById(bookId: String): BookEntity? {
         return bookDao.getBookById(bookId)
