@@ -48,7 +48,9 @@ class BookDetailViewModel @Inject constructor(
 
     fun toggleNotesEditor() {
         _showNotesEditor.value = !_showNotesEditor.value
-        _notesInput.value = _state.value.book?.notes.orEmpty()
+        if (_showNotesEditor.value) {
+            _showDescription.value = false
+        }
     }
 
     fun onNotesChanged(newValue: String) {
@@ -81,7 +83,11 @@ class BookDetailViewModel @Inject constructor(
 
     fun toggleDescriptionVisibility() {
         _showDescription.value = !_showDescription.value
+        if (_showDescription.value) {
+            _showNotesEditor.value = false
+        }
     }
+
 
     fun toggleReadStatus() {
         val currentBook = _state.value.book
