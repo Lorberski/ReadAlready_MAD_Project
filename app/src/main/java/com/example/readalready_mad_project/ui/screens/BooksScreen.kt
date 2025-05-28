@@ -39,6 +39,7 @@ fun BooksScreenContent(navController: NavHostController) {
 }
 
 
+
 @Composable
 fun MainContent(
     books: List<BookEntity>,
@@ -47,22 +48,35 @@ fun MainContent(
     onBookClick: (String) -> Unit,
     viewModel: BooksViewModel = hiltViewModel()
 ) {
+    val sortedBooks = remember(books) { books.sortedBy { it.title } }
     val listState = rememberLazyListState()
+    val scrollToIndex = remember { mutableStateOf<Int?>(null) }
+
+    // Smooth scroll in proper coroutine scope
+    LaunchedEffect(scrollToIndex.value) {
+        scrollToIndex.value?.let { index ->
+            if (index >= 0 && index < listState.layoutInfo.totalItemsCount) {
+                listState.animateScrollToItem(index)
+            }
+            scrollToIndex.value = null
+        }
+    }
 
     Row(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.weight(1f)) {
-        FilterBar(
-            selected = selectedFilter,
-            onFilterSelected = onFilterChange,
-            options = FilterOptionBookState.entries.toTypedArray()
-        )
+            FilterBar(
+                selected = selectedFilter,
+                onFilterSelected = onFilterChange,
+                options = FilterOptionBookState.entries.toTypedArray()
+            )
+
             LazyColumn(state = listState) {
-                items(books) { book ->
+                items(sortedBooks) { book ->
                     BookCard(
                         book = book,
                         repositoryAddFunction = { viewModel.deleteBook(book.id) },
                         onClick = { onBookClick(book.id) }
-                    ){
+                    ) {
                         withStatus()
                     }
                 }
@@ -71,27 +85,30 @@ fun MainContent(
 
         if (books.isNotEmpty()) {
             AlphabetScrollbar(
-                books = books,
+                books = sortedBooks,
                 onLetterClicked = { letter ->
-                    val index = books.indexOfFirst {
-                        it.title.startsWith(letter, ignoreCase = true)
+                    val index = sortedBooks.indexOfFirst {
+                        it.title.isNotBlank() &&
+                                it.title.firstOrNull()?.equals(letter, ignoreCase = true) == true
                     }
-                    if (index >= 0) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            listState.animateScrollToItem(index)
-                        }
-                    }
+                    scrollToIndex.value = index
                 }
             )
         }
     }
 }
 
+
 @Composable
 fun AlphabetScrollbar(
     books: List<BookEntity>,
     onLetterClicked: (Char) -> Unit
 ) {
+    // Set of first letters available
+    val availableLetters = remember(books) {
+        books.mapNotNull { it.title.firstOrNull()?.uppercaseChar() }.toSet()
+    }
+
     Column(
         modifier = Modifier
             .width(28.dp)
@@ -100,12 +117,18 @@ fun AlphabetScrollbar(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ('A'..'Z').forEach { letter ->
+            val isAvailable = letter in availableLetters
+
             Text(
                 text = letter.toString(),
                 fontSize = 12.sp,
+                color = if (isAvailable) androidx.compose.ui.graphics.Color.LightGray
+                else androidx.compose.ui.graphics.Color.Black,
                 modifier = Modifier
-                    .clickable { onLetterClicked(letter) }
                     .padding(2.dp)
+                    .clickable(enabled = isAvailable) {
+                        onLetterClicked(letter)
+                    }
             )
         }
     }
