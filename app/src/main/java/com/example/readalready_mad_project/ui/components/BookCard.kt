@@ -27,8 +27,10 @@ import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material3.MaterialTheme
 
 
 import com.example.readalready_mad_project.data.database.BookEntity
@@ -205,108 +207,173 @@ fun BookCard(
             }
 
 
-            Column(modifier = Modifier.align(Alignment.Top)) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Top)
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                // Titel
                 if (config.showTitle) {
-                    Text(book.title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
-                if (config.showAuthors) {
-                    Text("Author: ${book.authors?.joinToString(", ")}", fontSize = 14.sp)
-                }
-                if (config.showStatus) {
                     Text(
-                        text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
-                        fontSize = 13.sp
+                        text = book.title,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
+                // Autoren
+                if (config.showAuthors) {
+                    Text(
+                        text = "Autor(en):",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    Text(
+                        text = book.authors?.joinToString(", ") ?: "Keine Angabe",
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
 
+                // Status
+                if (config.showStatus) {
+                    Text(
+                        text = "Status:",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    Text(
+                        text = if (book.alreadyRead) "Bereits gelesen" else "Noch nicht gelesen",
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                // Weitere Details (nur bei expanded)
                 if (!config.expandable || expanded) {
                     if (config.showPublisher) {
-                        Text("Publisher: ${book.publisher}", fontSize = 13.sp)
+                        LabelAndValue("Verlag", book.publisher)
                     }
                     if (config.showPublishedDate) {
-                        Text("Published: ${book.publishedDate}", fontSize = 13.sp)
+                        LabelAndValue("Veröffentlichung", book.publishedDate)
                     }
                     if (config.showPageCount) {
-                        Text("Pages: ${book.pageCount}", fontSize = 13.sp)
+                        LabelAndValue("Seitenanzahl", "${book.pageCount}")
                     }
                     if (config.showRating) {
-                        Text(
-                            "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
-                            fontSize = 13.sp
+                        LabelAndValue(
+                            "Bewertung",
+                            "${book.averageRating} (${book.ratingsCount} Bewertungen)"
                         )
                     }
+
+                    // Beschreibung als Card
                     if (config.showDescription && !config.showDescriptionButton) {
-                        Text("Description: ${book.description}", fontSize = 13.sp)
+                        Text(
+                            text = "Beschreibung",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = book.description ?: "Keine Beschreibung vorhanden.",
+                            fontSize = 13.sp
+                        )
+
                     }
                 }
             }
         }
 
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(end = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (config.showDeleteSymbol) {
-                IconButton(onClick = {
-                    if (repositoryDeleteFunction != null) {
-                        repositoryDeleteFunction()
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete"
-                    )
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(end = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (config.showDeleteSymbol) {
+            IconButton(onClick = {
+                if (repositoryDeleteFunction != null) {
+                    repositoryDeleteFunction()
                 }
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete"
+                )
             }
+        }
 
-            if (config.showNotesButton) {
-                IconButton(onClick = {
-                    if (repositoryNotesToggleFunction != null) {
-                        repositoryNotesToggleFunction()
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.AddComment,
-                        contentDescription = "Notes"
-                    )
+        if (config.showNotesButton) {
+            IconButton(onClick = {
+                if (repositoryNotesToggleFunction != null) {
+                    repositoryNotesToggleFunction()
                 }
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.AddComment,
+                    contentDescription = "Notes"
+                )
             }
+        }
 
-            if (config.showDescriptionButton) {
-                IconButton(onClick = {
-                    config.descriptionToggleClick?.invoke()
-                }) {
+        if (config.showDescriptionButton) {
+            IconButton(onClick = {
+                config.descriptionToggleClick?.invoke()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Description,
+                    contentDescription = "Beschreibung ein-/ausblenden"
+                )
+            }
+        }
+
+
+        if (config.showAlreadyReadButton) {
+            if (repositoryReadToggleFunction != null) {
+                IconButton(
+                    onClick = repositoryReadToggleFunction,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
                     Icon(
-                        imageVector = Icons.Filled.Description,
-                        contentDescription = "Beschreibung ein-/ausblenden"
+                        imageVector = if (book.alreadyRead)
+                            Icons.Default.MenuBook
+                        else
+                            Icons.Default.Book,
+                        contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
                     )
-                }
-            }
-
-
-            if (config.showAlreadyReadButton) {
-                if (repositoryReadToggleFunction != null) {
-                    IconButton(
-                        onClick = repositoryReadToggleFunction,
-                        modifier = Modifier.padding(start = 8.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (book.alreadyRead)
-                                Icons.Default.MenuBook
-                            else
-                                Icons.Default.Book,
-                            contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
-                        )
-                    }
                 }
             }
         }
     }
 }
+
+
+@Composable
+fun LabelAndValue(label: String, value: String?) {
+    if (!value.isNullOrEmpty()) {
+        Text(
+            text = "$label:",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.secondary
+        )
+        Text(
+            text = value,
+            fontSize = 13.sp,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+    }
+}
+
 
 @Composable
 fun BookImage(imageUrl: String?) {
