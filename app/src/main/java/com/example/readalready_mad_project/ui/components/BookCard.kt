@@ -45,8 +45,9 @@ data class BookCardConfig(
     val showImage: Boolean = true,
     val expandable: Boolean = true,
     val showStatus: Boolean = false,
-    val showButton: Boolean = false,
+    val showAddButton: Boolean = false,
     val showDeleteSymbol: Boolean = false,
+    val showAlreadyReadButton: Boolean = false,
 )
 
 class BookCardConfigBuilder {
@@ -60,8 +61,9 @@ class BookCardConfigBuilder {
     private var showImage = true
     private var expandable = true
     private var showStatus = false
-    private var showButton = false
+    private var showAddButton = false
     private var showDeleteSymbol = false
+    private var showAlreadyReadButton = false
 
     fun withTitle() = apply { showTitle = true }
     fun withoutTitle() = apply { showTitle = false }
@@ -93,11 +95,14 @@ class BookCardConfigBuilder {
     fun withStatus() = apply {showStatus = true}
     fun withoutStatus() = apply {showStatus = false}
 
-    fun withButton() = apply {showButton = true}
-    fun withoutAddSymbol() = apply {showButton = false}
+    fun withAddButton() = apply {showAddButton = true}
+    fun withoutAddButton() = apply {showAddButton = false}
 
     fun withDeleteSymbol() = apply { showDeleteSymbol = true }
     fun withoutDeleteSymbol() = apply { showDeleteSymbol = false }
+
+    fun withAlreadyReadButton() = apply { showAlreadyReadButton = true }
+    fun withoutAlreadyReadButton() = apply { showAlreadyReadButton = false }
 
     fun build(): BookCardConfig {
         return BookCardConfig(
@@ -111,8 +116,9 @@ class BookCardConfigBuilder {
             showImage,
             expandable,
             showStatus,
-            showButton,
+            showAddButton,
             showDeleteSymbol,
+            showAlreadyReadButton,
 
         )
     }
@@ -123,7 +129,9 @@ class BookCardConfigBuilder {
 fun BookCard(
     book: BookEntity,
     modifier: Modifier = Modifier,
-    repositoryFunction: () -> Unit,
+    repositoryAddFunction: (() -> Unit)? = null,
+    repositoryDeleteFunction: (() -> Unit)? = null,
+    repositoryToggleFunction: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     configBuilder: (BookCardConfigBuilder.() -> Unit)? = null
 
@@ -156,15 +164,33 @@ fun BookCard(
             }
 
                 if (!config.expandable || expanded){
-                    if (config.showButton){
-                        Button(
-                            onClick = repositoryFunction,
-                            modifier = Modifier
-                        ) {
-                            Text("Add")
+                    if (config.showAddButton){
+                        if (repositoryAddFunction != null) {
+                            Button(
+                                onClick = repositoryAddFunction,
+                                modifier = Modifier
+                            ) {
+                                Text("Add")
+                            }
                         }
                     }
-                    if (config.showDeleteSymbol){ IconButton(onClick = { repositoryFunction() }) {
+
+                    if (config.showAlreadyReadButton){
+                        if (repositoryToggleFunction != null) {
+                            Button(
+                                onClick = repositoryToggleFunction,
+                                modifier = Modifier
+                            ) {
+                                Text("Read/Unread")
+                            }
+                        }
+                    }
+
+                    if (config.showDeleteSymbol){ IconButton(onClick = {
+                        if (repositoryDeleteFunction != null) {
+                            repositoryDeleteFunction()
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = "Delete"
@@ -247,7 +273,7 @@ fun BookCardPreview() {
                 thumbnail = "TODO()",
                 alreadyRead = false
             ),
-            repositoryFunction = {println("addFunction")},
+            repositoryAddFunction = {println("addFunction")},
         )
     }
 }

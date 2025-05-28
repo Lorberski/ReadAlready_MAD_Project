@@ -65,13 +65,14 @@ fun BookDetailScreen(bookId: String, navController: NavHostController) {
                     ) {
                         BookCard(
                             book = book,
-                            repositoryFunction = { /* optional: Aktionen wie Löschen */ },
-                            onClick = null, // kein Klick nötig auf Detail-Screen
+                            repositoryDeleteFunction = { viewModel.deleteBook() },
+                            repositoryToggleFunction = { viewModel.toggleReadStatus() },
+                            onClick = null,
                             configBuilder = {
                                 notExpandable()
                                 withStatus()
-                                withDeleteSymbol() // falls du das Löschen erlauben willst
-                                // oder je nach Wunsch anpassen
+                                withDeleteSymbol()
+                                withAlreadyReadButton()
                             }
                         )
                     }

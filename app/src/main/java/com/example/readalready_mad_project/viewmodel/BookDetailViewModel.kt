@@ -37,4 +37,23 @@ class BookDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun toggleReadStatus() {
+        val currentBook = _state.value.book
+        if (currentBook != null) {
+            val updateBook = currentBook.copy(alreadyRead = !currentBook.alreadyRead)
+            viewModelScope.launch {
+                repository.toggleBookStatusInDB(updateBook)
+            }
+        }
+    }
+
+    fun deleteBook() {
+        val currentBook = _state.value.book
+        if (currentBook != null) {
+            viewModelScope.launch {
+                repository.deleteBookFromDB(currentBook.id)
+            }
+        }
+    }
 }
