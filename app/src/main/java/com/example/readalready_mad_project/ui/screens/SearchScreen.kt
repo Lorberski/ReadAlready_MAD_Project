@@ -17,7 +17,6 @@ import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.ui.components.FilterBar
 import com.example.readalready_mad_project.ui.components.SearchBar
 import com.example.readalready_mad_project.viewmodel.SearchViewmodel
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -58,7 +57,7 @@ fun SearchMainContent(
                 items(books) { book ->
                     BookCard(
                         book = book,
-                        repositoryFunction = {viewmodel.addBook(book)}
+                        repositoryAddFunction = {viewmodel.addBook(book)}
                     ){
                         withTitle()
                         withAuthors()
@@ -66,8 +65,7 @@ fun SearchMainContent(
                         withDescription()
                         expandable()
                         withoutStatus()
-                        withButton()
-
+                        withAddButton()
                     }
                 }
             }
