@@ -30,7 +30,7 @@ interface BookApiService{
 object NetworkModule {
 
     private const val BASE_URL = "https://www.googleapis.com/books/v1/"
-    private const val CACHE_SIZE_BYTES = 1024L * 1024L * 1024L // 1024 MB = 1 GB
+    private const val CACHE_SIZE_BYTES = 10L * 1024L * 1024L // 10 MB
 
     @Provides
     @Singleton
