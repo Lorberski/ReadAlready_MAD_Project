@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.navigation.NavHostController
+import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.components.FilterBar
 
 @Composable
@@ -32,7 +33,7 @@ fun BooksScreenContent(navController: NavHostController) {
         selectedFilter = state.filter,
         onFilterChange = viewModel::onFilterChanged,
         onBookClick = { bookId ->
-            navController.navigate("book_detail/$bookId")
+            navController.navigate(Navigation.BookDetailScreen.createRoute(bookId))
         }
     )
 }

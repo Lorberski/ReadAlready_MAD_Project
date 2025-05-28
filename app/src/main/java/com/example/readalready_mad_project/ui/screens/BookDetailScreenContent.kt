@@ -10,12 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.readalready_mad_project.data.database.BookEntity
+import com.example.readalready_mad_project.states.BookDetailState
+import com.example.readalready_mad_project.states.FilterOptionBookState
+import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.viewmodel.BookDetailViewModel
+import com.example.readalready_mad_project.viewmodel.BooksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookDetailScreen(bookId: String, navController: NavHostController) {
+fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
     val viewModel: BookDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
@@ -23,13 +28,34 @@ fun BookDetailScreen(bookId: String, navController: NavHostController) {
         viewModel.loadBook(bookId)
     }
 
+    MainContent(
+        navController = navController,
+        state = state,
+        onBackButton = {
+            navController.navigate(Navigation.BooksScreen.route)
+        })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainContent(
+    viewModel: BookDetailViewModel = hiltViewModel(),
+    navController: NavHostController,
+    state: BookDetailState,
+    onBackButton:() -> Unit,
+
+
+    ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Book Details") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Zurück")
+                    IconButton(onClick = onBackButton) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Zurück"
+                        )
                     }
                 }
             )
@@ -56,7 +82,6 @@ fun BookDetailScreen(bookId: String, navController: NavHostController) {
                 state.book != null -> {
                     val book = state.book!!
 
-                    // BookCard anzeigen, ohne expandierbar zu sein, dafür mit Status usw.
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -64,7 +89,9 @@ fun BookDetailScreen(bookId: String, navController: NavHostController) {
                     ) {
                         BookCard(
                             book = book,
-                            repositoryDeleteFunction = { viewModel.deleteBook() },
+                            repositoryDeleteFunction = {
+                                viewModel.deleteBook()
+                                navController.popBackStack() },
                             repositoryToggleFunction = { viewModel.toggleReadStatus() },
                             onClick = null,
                             configBuilder = {

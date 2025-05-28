@@ -1,7 +1,6 @@
 package com.example.readalready_mad_project
 
 import android.os.Bundle
-import android.provider.Settings.Global.getString
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,10 +26,8 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import com.example.readalready_mad_project.ui.Navigation
-import com.example.readalready_mad_project.ui.components.BookCard
-import com.example.readalready_mad_project.ui.screens.BookDetailScreen
+import com.example.readalready_mad_project.ui.screens.BookDetailScreenContent
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 
@@ -119,7 +116,7 @@ fun BottomNavigationBarApp() {
             composable("book_detail/{bookId}") { backStackEntry ->
                 val bookId = backStackEntry.arguments?.getString("bookId")
                 if (bookId != null) {
-                    BookDetailScreen(bookId = bookId, navController = navController)
+                    BookDetailScreenContent(bookId = bookId, navController = navController)
                 }
             }
 
