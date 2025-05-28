@@ -1,6 +1,6 @@
 package com.example.readalready_mad_project.data.api
 
-import com.example.readalready_mad_project.data.model.Book
+
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
