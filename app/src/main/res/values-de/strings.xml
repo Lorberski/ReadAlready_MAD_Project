@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ReadAlready_MAD_Project</string>
+    <string name="my_books">Meine Bücher</string>
+    <string name="settings">Einstellungen</string>
+    <string name="search_books">Bücher suchen</string>
+</resources>
