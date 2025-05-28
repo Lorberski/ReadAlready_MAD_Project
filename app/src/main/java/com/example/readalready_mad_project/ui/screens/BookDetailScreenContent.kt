@@ -1,6 +1,8 @@
 package com.example.readalready_mad_project.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -79,8 +81,9 @@ fun MainContent(
 
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxSize()
                             .padding(16.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
                         BookCard(
                             book = book,
@@ -106,7 +109,7 @@ fun MainContent(
                             ) {
                                 Text(
                                     text = book.description ?: "Keine Beschreibung vorhanden.",
-                                    modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp)
+                                    modifier = Modifier.padding(16.dp)
                                 )
                             }
                         }
