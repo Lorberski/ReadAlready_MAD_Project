@@ -1,8 +1,6 @@
 package com.example.readalready_mad_project.data.mapper
-
 import com.example.readalready_mad_project.data.api.BookResponse
 import com.example.readalready_mad_project.data.database.BookEntity
-import com.example.readalready_mad_project.data.model.Book
 
 object BookMapper {
 
