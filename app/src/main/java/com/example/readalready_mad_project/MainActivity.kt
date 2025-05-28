@@ -62,7 +62,7 @@ fun BottomNavigationBarApp() {
                         )
                     },
                     label = { Text(stringResource(id = R.string.my_books)) },
-                    selected = currentRoute == Navigation.BooksScreen.route,
+                    selected = currentRoute == Navigation.BooksScreen.route || currentRoute == Navigation.BookDetailScreen.route,
                     onClick = {
                         navController.navigate(Navigation.BooksScreen.route) {
                             launchSingleTop = true
