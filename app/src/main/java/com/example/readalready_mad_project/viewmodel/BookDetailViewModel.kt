@@ -21,6 +21,9 @@ class BookDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(BookDetailState())
     val state: StateFlow<BookDetailState> = _state
 
+    private val _showDescription = MutableStateFlow(false)
+    val showDescription: StateFlow<Boolean> = _showDescription
+
     init {
         val bookId = savedStateHandle.get<String>("bookId")
         bookId?.let { loadBook(it) }
@@ -38,6 +41,9 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
+    fun toggleDescriptionVisibility() {
+        _showDescription.value = !_showDescription.value
+    }
 
     fun toggleReadStatus() {
         val currentBook = _state.value.book

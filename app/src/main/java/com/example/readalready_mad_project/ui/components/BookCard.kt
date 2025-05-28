@@ -27,7 +27,8 @@ import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.foundation.layout.Arrangement
-
+import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.filled.Description
 
 
 import com.example.readalready_mad_project.data.database.BookEntity
@@ -52,6 +53,9 @@ data class BookCardConfig(
     val showAddButton: Boolean = false,
     val showDeleteSymbol: Boolean = false,
     val showAlreadyReadButton: Boolean = false,
+    val showNotesButton: Boolean = false,
+    val showDescriptionButton: Boolean = false,
+    val descriptionToggleClick: (() -> Unit)? = null,
 )
 
 class BookCardConfigBuilder {
@@ -68,6 +72,10 @@ class BookCardConfigBuilder {
     private var showAddButton = false
     private var showDeleteSymbol = false
     private var showAlreadyReadButton = false
+    private var showNotesButton = false
+    private var showDescriptionButton = false
+    private var descriptionToggleClick: (() -> Unit)? = null
+
 
     fun withTitle() = apply { showTitle = true }
     fun withoutTitle() = apply { showTitle = false }
@@ -108,6 +116,15 @@ class BookCardConfigBuilder {
     fun withAlreadyReadButton() = apply { showAlreadyReadButton = true }
     fun withoutAlreadyReadButton() = apply { showAlreadyReadButton = false }
 
+    fun withNotesButton() = apply { showNotesButton = true }
+    fun withoutNotesButton() = apply { showNotesButton = false }
+
+    fun withDescriptionButton(onClick: () -> Unit) = apply {
+        showDescriptionButton = true
+        descriptionToggleClick = onClick
+    }
+    fun withoutDescriptionButton() = apply { showDescriptionButton = false }
+
     fun build(): BookCardConfig {
         return BookCardConfig(
             showTitle,
@@ -123,8 +140,10 @@ class BookCardConfigBuilder {
             showAddButton,
             showDeleteSymbol,
             showAlreadyReadButton,
-
-            )
+            showNotesButton,
+            showDescriptionButton,
+                    descriptionToggleClick
+        )
     }
 }
 
@@ -135,7 +154,9 @@ fun BookCard(
     modifier: Modifier = Modifier,
     repositoryAddFunction: (() -> Unit)? = null,
     repositoryDeleteFunction: (() -> Unit)? = null,
-    repositoryToggleFunction: (() -> Unit)? = null,
+    repositoryReadToggleFunction: (() -> Unit)? = null,
+    repositoryNotesToggleFunction: (() -> Unit)? = null,
+    repositoryDescriptionToggleFunction: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     configBuilder: (BookCardConfigBuilder.() -> Unit)? = null
 
@@ -179,20 +200,6 @@ fun BookCard(
                             }
                         }
                     }
-
-
-                    if (config.showDeleteSymbol) {
-                        IconButton(onClick = {
-                            if (repositoryDeleteFunction != null) {
-                                repositoryDeleteFunction()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Delete"
-                            )
-                        }
-                    }
                 }
             }
 
@@ -204,63 +211,100 @@ fun BookCard(
                 if (config.showAuthors) {
                     Text("Author: ${book.authors?.joinToString(", ")}", fontSize = 14.sp)
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    if (config.showStatus) {
-                        Text(
-                            text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
-                            fontSize = 13.sp
-                        )
-                    }
-
-                    if (config.showAlreadyReadButton) {
-                        if (repositoryToggleFunction != null) {
-                            IconButton(
-                                onClick = repositoryToggleFunction,
-                                modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (book.alreadyRead)
-                                        Icons.Default.MenuBook
-                                    else
-                                        Icons.Default.Book,
-                                    contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
-                                )
-                            }
-                        }
-                    }
+                if (config.showStatus) {
+                    Text(
+                        text = if (book.alreadyRead) "Status: Already read" else "Status: Not read",
+                        fontSize = 13.sp
+                    )
                 }
+            }
 
-                if (!config.expandable || expanded) {
-                    if (config.showPublisher) {
-                        Text("Publisher: ${book.publisher}", fontSize = 13.sp)
+            if (!config.expandable || expanded) {
+                if (config.showPublisher) {
+                    Text("Publisher: ${book.publisher}", fontSize = 13.sp)
+                }
+                if (config.showPublishedDate) {
+                    Text("Published: ${book.publishedDate}", fontSize = 13.sp)
+                }
+                if (config.showPageCount) {
+                    Text("Pages: ${book.pageCount}", fontSize = 13.sp)
+                }
+                if (config.showRating) {
+                    Text(
+                        "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
+                        fontSize = 13.sp
+                    )
+                }
+                if (config.showDescription) {
+                    Text("Description: ${book.description}", fontSize = 13.sp)
+                }
+            }
+        }
+
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (config.showDeleteSymbol) {
+                IconButton(onClick = {
+                    if (repositoryDeleteFunction != null) {
+                        repositoryDeleteFunction()
                     }
-                    if (config.showPublishedDate) {
-                        Text("Published: ${book.publishedDate}", fontSize = 13.sp)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete"
+                    )
+                }
+            }
+
+            if (config.showNotesButton) {
+                IconButton(onClick = {
+                    if (repositoryNotesToggleFunction != null) {
+                        repositoryNotesToggleFunction()
                     }
-                    if (config.showPageCount) {
-                        Text("Pages: ${book.pageCount}", fontSize = 13.sp)
-                    }
-                    if (config.showRating) {
-                        Text(
-                            "Rating: ${book.averageRating} (${book.ratingsCount} ratings)",
-                            fontSize = 13.sp
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.AddComment,
+                        contentDescription = "Notes"
+                    )
+                }
+            }
+
+            if (config.showDescriptionButton) {
+                IconButton(onClick = {
+                    config.descriptionToggleClick?.invoke()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Description,
+                        contentDescription = "Beschreibung ein-/ausblenden"
+                    )
+                }
+            }
+
+
+            if (config.showAlreadyReadButton) {
+                if (repositoryReadToggleFunction != null) {
+                    IconButton(
+                        onClick = repositoryReadToggleFunction,
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (book.alreadyRead)
+                                Icons.Default.MenuBook
+                            else
+                                Icons.Default.Book,
+                            contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
                         )
-                    }
-                    if (config.showDescription) {
-                        Text("Description: ${book.description}", fontSize = 13.sp)
                     }
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun BookImage(imageUrl: String?) {

@@ -10,19 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.states.BookDetailState
-import com.example.readalready_mad_project.states.FilterOptionBookState
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.viewmodel.BookDetailViewModel
-import com.example.readalready_mad_project.viewmodel.BooksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
     val viewModel: BookDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
+    val showDescription by viewModel.showDescription.collectAsState()
 
     LaunchedEffect(bookId) {
         viewModel.loadBook(bookId)
@@ -31,41 +29,38 @@ fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
     MainContent(
         navController = navController,
         state = state,
+        showDescription = showDescription,
+        onToggleDescription = { viewModel.toggleDescriptionVisibility() },
         onBackButton = {
             navController.navigate(Navigation.BooksScreen.route)
-        })
+        },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainContent(
-    viewModel: BookDetailViewModel = hiltViewModel(),
     navController: NavHostController,
     state: BookDetailState,
-    onBackButton:() -> Unit,
+    showDescription: Boolean,
+    onToggleDescription: () -> Unit,
+    onBackButton: () -> Unit
+) {
+    val viewModel: BookDetailViewModel = hiltViewModel()
 
-
-    ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Book Details") },
                 navigationIcon = {
                     IconButton(onClick = onBackButton) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Zurück"
-                        )
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Zurück")
                     }
                 }
             )
         }
     ) { padding ->
-        Box(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
+        Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             when {
                 state.isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -73,7 +68,7 @@ fun MainContent(
 
                 state.error != null -> {
                     Text(
-                        text = "Error: ${state.error}",
+                        text = "Fehler: ${state.error}",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -91,19 +86,34 @@ fun MainContent(
                             book = book,
                             repositoryDeleteFunction = {
                                 viewModel.deleteBook()
-                                navController.popBackStack() },
-                            repositoryToggleFunction = { viewModel.toggleReadStatus() },
+                                navController.popBackStack()
+                            },
+                            repositoryReadToggleFunction = { viewModel.toggleReadStatus() },
                             onClick = null,
                             configBuilder = {
                                 notExpandable()
                                 withStatus()
                                 withDeleteSymbol()
                                 withAlreadyReadButton()
-                            }
+                                withNotesButton()
+                                withDescriptionButton(onClick = onToggleDescription)                            }
                         )
+
+                        if (showDescription) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            ) {
+                                Text(
+                                    text = book.description ?: "Keine Beschreibung vorhanden.",
+                                    modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
+
