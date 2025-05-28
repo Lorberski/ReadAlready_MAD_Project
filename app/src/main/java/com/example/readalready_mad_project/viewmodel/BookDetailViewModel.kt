@@ -30,6 +30,17 @@ class BookDetailViewModel @Inject constructor(
     private val _notesInput = MutableStateFlow("")
     val notesInput: StateFlow<String> = _notesInput
 
+    private val _isEditingNotes = MutableStateFlow(false)
+    val isEditingNotes: StateFlow<Boolean> = _isEditingNotes
+
+    fun startEditingNotes() {
+        _isEditingNotes.value = true
+    }
+
+    fun stopEditingNotes() {
+        _isEditingNotes.value = false
+    }
+
     init {
         val bookId = savedStateHandle.get<String>("bookId")
         bookId?.let { loadBook(it) }
@@ -52,7 +63,6 @@ class BookDetailViewModel @Inject constructor(
             viewModelScope.launch {
                 repository.updateBookInDb(updatedBook)
             }
-            _showNotesEditor.value = false
         }
     }
 

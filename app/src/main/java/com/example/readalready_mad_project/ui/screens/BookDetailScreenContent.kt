@@ -39,9 +39,13 @@ fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
         onToggleDescription = { viewModel.toggleDescriptionVisibility() },
         showNotesEditor = showNotesEditor,
         notesInput = notesInput,
+        isEditingNotes = viewModel.isEditingNotes.collectAsState().value,
+        onStartEditing = { viewModel.startEditingNotes() },
+        onStopEditing = { viewModel.stopEditingNotes() },
         onBackButton = {
             navController.navigate(Navigation.BooksScreen.route)
         },
+        viewModel = viewModel,
     )
 }
 
@@ -54,7 +58,12 @@ fun MainContent(
     onToggleDescription: () -> Unit,
     showNotesEditor: Boolean,
     notesInput: String,
+    isEditingNotes: Boolean,
+    onStartEditing: () -> Unit,
+    onStopEditing: () -> Unit,
+    viewModel: BookDetailViewModel,
     onBackButton: () -> Unit
+
 ) {
     val viewModel: BookDetailViewModel = hiltViewModel()
 
@@ -130,23 +139,43 @@ fun MainContent(
                                 elevation = CardDefaults.cardElevation(4.dp)
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
-                                    Text("Notizen bearbeiten", fontWeight = FontWeight.Bold)
+                                    Text("Notizen", fontWeight = FontWeight.Bold)
 
-                                    OutlinedTextField(
-                                        value = notesInput,
-                                        onValueChange = { viewModel.onNotesChanged(it) },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(120.dp),
-                                        placeholder = { Text("Gib deine Notizen hier ein") }
-                                    )
+                                    if (isEditingNotes) {
+                                        OutlinedTextField(
+                                            value = notesInput,
+                                            onValueChange = { viewModel.onNotesChanged(it) },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(120.dp),
+                                            placeholder = { Text("Gib deine Notizen hier ein") }
+                                        )
 
-                                    Row(
-                                        horizontalArrangement = Arrangement.End,
-                                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                                    ) {
-                                        Button(onClick = { viewModel.saveNotes() }) {
-                                            Text("Speichern")
+                                        Row(
+                                            horizontalArrangement = Arrangement.End,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 8.dp)
+                                        ) {
+                                            Button(onClick = {
+                                                viewModel.saveNotes()
+                                                viewModel.stopEditingNotes()
+                                            }) {
+                                                Text("Speichern")
+                                            }
+                                        }
+                                    } else {
+                                        Text(
+                                            text = notesInput.ifBlank { "Keine Notizen vorhanden." },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 8.dp)
+                                        )
+                                        Button(
+                                            onClick = onStartEditing,
+                                            modifier = Modifier.align(Alignment.End)
+                                        ) {
+                                            Text("Bearbeiten")
                                         }
                                     }
                                 }
