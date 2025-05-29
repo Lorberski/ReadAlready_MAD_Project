@@ -68,6 +68,19 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
+    fun deleteNotes() {
+        val currentBook = _state.value.book
+        if (currentBook != null) {
+            val updatedBook = currentBook.copy(notes = null)
+            _state.update { it.copy(book = updatedBook) }
+            _notesInput.value = ""
+            viewModelScope.launch {
+                repository.updateBookInDb(updatedBook)
+            }
+        }
+    }
+
+
 
     fun loadBook(bookId: String) {
         viewModelScope.launch {

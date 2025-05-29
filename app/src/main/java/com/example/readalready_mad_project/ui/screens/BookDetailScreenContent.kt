@@ -152,11 +152,18 @@ fun MainContent(
                                         )
 
                                         Row(
-                                            horizontalArrangement = Arrangement.End,
+                                            horizontalArrangement = Arrangement.SpaceBetween,
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(top = 8.dp)
                                         ) {
+                                            Button(onClick = {
+                                                viewModel.deleteNotes()
+                                                viewModel.stopEditingNotes()
+                                            }) {
+                                                Text("Löschen")
+                                            }
+
                                             Button(onClick = {
                                                 viewModel.saveNotes()
                                                 viewModel.stopEditingNotes()
