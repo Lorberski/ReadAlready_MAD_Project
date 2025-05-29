@@ -16,6 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.readalready_mad_project.R
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.states.FilterOptionSearchState
@@ -26,19 +31,28 @@ import com.example.readalready_mad_project.viewmodel.SearchViewmodel
 
 
 @Composable
-fun SearchScreenContent(){
+fun SearchScreenContent(navController: NavController){
     val viewModel: SearchViewmodel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-    var firstStart by remember { mutableStateOf(true) }
-    var firstSearch by remember { mutableStateOf(true) }
 
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
+    val currentEntry = rememberUpdatedState(currentBackStackEntry)
 
-    LaunchedEffect(state.allBooks) {
-        if (firstStart) {
+    DisposableEffect(currentEntry.value) {
+        onDispose {
+            if (!navController.currentDestination?.route.orEmpty().contains("search")) {
+                viewModel.setFirstStart(true)
+                viewModel.setFirstSearch(true)
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (state.firstStart) {
             viewModel.showTrendingBooks()
-            firstStart = false
+            viewModel.setFirstStart(false)
         }
     }
 
@@ -48,7 +62,7 @@ fun SearchScreenContent(){
             onQueryChange = { searchQuery = it },
             onSearchTriggered = {
                 viewModel.showBookSearchResult(searchQuery)
-                firstSearch = false
+                viewModel.setFirstSearch(false)
             })
         FilterBar(
             selected = state.filter,
@@ -56,7 +70,7 @@ fun SearchScreenContent(){
             options = FilterOptionSearchState.entries.toTypedArray()
         )
 
-        if (firstSearch){
+        if (state.firstSearch){
             Text(
                 text = (stringResource(id = R.string.trending_books)),
                 fontSize = 24.sp,

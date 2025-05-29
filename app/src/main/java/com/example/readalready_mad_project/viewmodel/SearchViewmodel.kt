@@ -1,10 +1,10 @@
 package com.example.readalready_mad_project.viewmodel
 
 
-import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.repository.BookRepository
 import com.example.readalready_mad_project.states.FilterOptionSearchState
@@ -61,6 +61,14 @@ class SearchViewmodel @Inject constructor(
         _state.update { currentState ->
             currentState.copy(filter = newFilter)
         }
+    }
+
+    fun setFirstStart(boolean: Boolean){
+        _state.update { it.copy(firstStart = boolean)}
+    }
+
+    fun setFirstSearch(boolean: Boolean){
+        _state.update { it.copy(firstSearch = boolean)}
     }
 
 }

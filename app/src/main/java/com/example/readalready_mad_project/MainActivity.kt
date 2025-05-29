@@ -108,7 +108,7 @@ fun BottomNavigationBarApp() {
                 BooksScreenContent(navController)
             }
             composable(Navigation.SearchScreen.route) {
-                SearchScreenContent()
+            SearchScreenContent(navController)
             }
             composable(Navigation.SettingsScreen.route) {
                 /* TODO: SettingsScreen() */
