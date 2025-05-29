@@ -102,13 +102,13 @@ object NetworkModule {
 
     @GoogleBookApi
     @Provides
-    fun provideApiOneService(@GoogleBookApi retrofit: Retrofit): GoogleBookApiService {
+    fun provideGoogleBookApiService(@GoogleBookApi retrofit: Retrofit): GoogleBookApiService {
         return retrofit.create(GoogleBookApiService::class.java)
     }
 
     @NYTBookApi
     @Provides
-    fun provideApiTwoService(@NYTBookApi retrofit: Retrofit): NYTBookApiService {
+    fun provideNYTBookApiService(@NYTBookApi retrofit: Retrofit): NYTBookApiService {
         return retrofit.create(NYTBookApiService::class.java)
     }
 }

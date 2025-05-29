@@ -39,6 +39,8 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import com.example.readalready_mad_project.ui.theme.CardGreen
 
 
 data class BookCardConfig(
@@ -183,7 +185,14 @@ fun BookCard(
             },
 
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = CardDefaults.shape
+        shape = CardDefaults.shape,
+
+        colors = if (book.alreadyRead) {
+            CardDefaults.cardColors(containerColor = CardGreen)
+        } else {
+            CardDefaults.cardColors()
+        }
+
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
 
