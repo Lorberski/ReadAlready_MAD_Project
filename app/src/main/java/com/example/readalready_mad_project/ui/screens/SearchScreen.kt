@@ -3,14 +3,20 @@ package com.example.readalready_mad_project.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.readalready_mad_project.R
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.states.FilterOptionSearchState
 import com.example.readalready_mad_project.ui.components.BookCard
@@ -24,16 +30,40 @@ fun SearchScreenContent(){
     val viewModel: SearchViewmodel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+    var firstStart by remember { mutableStateOf(true) }
+    var firstSearch by remember { mutableStateOf(true) }
+
+
+
+    LaunchedEffect(state.allBooks) {
+        if (firstStart) {
+            viewModel.showTrendingBooks()
+            firstStart = false
+        }
+    }
+
     Column {
         SearchBar(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearchTriggered = { viewModel.searchForBooks(searchQuery) })
+            onSearchTriggered = {
+                viewModel.showBookSearchResult(searchQuery)
+                firstSearch = false
+            })
         FilterBar(
             selected = state.filter,
             onFilterSelected = viewModel::onSearchFilterChanged,
             options = FilterOptionSearchState.entries.toTypedArray()
         )
+
+        if (firstSearch){
+            Text(
+                text = (stringResource(id = R.string.trending_books)),
+                fontSize = 24.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
         SearchMainContent(
             books = state.allBooks
         )

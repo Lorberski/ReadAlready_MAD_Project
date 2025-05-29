@@ -5,4 +5,5 @@
     <string name="settings">Einstellungen</string>
     <string name="search_books">Bücher suchen</string>
     <string name="filter_all">Alle</string>
+    <string name="trending_books">Beliebte Bücher</string>
 </resources>

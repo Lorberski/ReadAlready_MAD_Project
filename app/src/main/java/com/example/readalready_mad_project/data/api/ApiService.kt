@@ -1,4 +1,5 @@
 package com.example.readalready_mad_project.data.api
+
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -8,28 +9,45 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.io.File
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GoogleBookApi
 
-interface BookApiService{
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NYTBookApi
+
+
+interface GoogleBookApiService{
     @GET("volumes")
     suspend fun getBooks(
         @Query("q") query: String,
         @Query("maxResults") maxResults: Int,
 
-    ): BookResponse
+        ): BookResponse
 }
+
+interface  NYTBookApiService {
+    @GET("lists/overview.json")
+    suspend fun getTrendingBooks(
+        @Query("api-key") apiKey: String
+    ): NYTResponse
+}
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://www.googleapis.com/books/v1/"
     private const val CACHE_SIZE_BYTES = 10L * 1024L * 1024L // 10 MB
 
     @Provides
@@ -58,22 +76,43 @@ object NetworkModule {
             .build()
     }
 
+
+    @GoogleBookApi
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
+    fun provideRetrofitGoogleApi(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl("https://www.googleapis.com/books/v1/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+    @NYTBookApi
     @Provides
     @Singleton
-    fun provideBookApiService(retrofit: Retrofit): BookApiService {
-        return retrofit.create(BookApiService::class.java)
+    fun provideRetrofitNYTBookApi(client: OkHttpClient): Retrofit{
+        return Retrofit.Builder()
+            .baseUrl("https://api.nytimes.com/svc/books/v3/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+
+    @GoogleBookApi
+    @Provides
+    fun provideApiOneService(@GoogleBookApi retrofit: Retrofit): GoogleBookApiService {
+        return retrofit.create(GoogleBookApiService::class.java)
+    }
+
+    @NYTBookApi
+    @Provides
+    fun provideApiTwoService(@NYTBookApi retrofit: Retrofit): NYTBookApiService {
+        return retrofit.create(NYTBookApiService::class.java)
     }
 }
+
 
 data class BookResponse(
     val kind: String?,
@@ -102,4 +141,21 @@ data class VolumeInfo(
 data class ImageLinks(
     val smallThumbnail: String?,
     val thumbnail: String?
+)
+
+
+data class NYTResponse(
+    val results: Results?
+)
+
+data class Results(
+    val lists: List<ListsItem>?
+)
+
+data class ListsItem(
+    val books: List<Book>?
+)
+
+data class Book(
+    val title: String?
 )

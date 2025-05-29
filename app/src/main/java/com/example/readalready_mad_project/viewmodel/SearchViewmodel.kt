@@ -1,8 +1,10 @@
 package com.example.readalready_mad_project.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.readalready_mad_project.data.database.BookEntity
 import com.example.readalready_mad_project.data.repository.BookRepository
 import com.example.readalready_mad_project.states.FilterOptionSearchState
@@ -22,7 +24,7 @@ class SearchViewmodel @Inject constructor(
     private val _state = MutableStateFlow(SearchState())
     val state = _state.asStateFlow()
 
-    fun searchForBooks(query: String) {
+    fun showBookSearchResult(query: String) {
         viewModelScope.launch {
             val currentFilter = _state.value.filter
 
@@ -35,6 +37,14 @@ class SearchViewmodel @Inject constructor(
                 author = author,
                 isbn = isbn
             ).collect { books ->
+                _state.update { it.copy(allBooks = books) }
+            }
+        }
+    }
+
+    fun showTrendingBooks() {
+        viewModelScope.launch {
+            repository.getTrendingBooks().collect { books ->
                 _state.update { it.copy(allBooks = books) }
             }
         }
