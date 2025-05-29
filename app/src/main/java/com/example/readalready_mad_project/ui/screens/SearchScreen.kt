@@ -28,6 +28,10 @@ import com.example.readalready_mad_project.ui.components.BookCard
 import com.example.readalready_mad_project.ui.components.FilterBar
 import com.example.readalready_mad_project.ui.components.SearchBar
 import com.example.readalready_mad_project.viewmodel.SearchViewmodel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -43,8 +47,12 @@ fun SearchScreenContent(navController: NavController){
     DisposableEffect(currentEntry.value) {
         onDispose {
             if (!navController.currentDestination?.route.orEmpty().contains("search")) {
-                viewModel.setFirstStart(true)
-                viewModel.setFirstSearch(true)
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(1000)
+                    viewModel.setFirstStart(true)
+                    viewModel.setFirstSearch(true)
+                    viewModel.showTrendingBooks()
+                }
             }
         }
     }
