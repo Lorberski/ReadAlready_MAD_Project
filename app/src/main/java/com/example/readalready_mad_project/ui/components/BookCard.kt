@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.MaterialTheme
@@ -351,7 +352,7 @@ fun BookCard(
                 ) {
                     Icon(
                         imageVector = if (book.alreadyRead)
-                            Icons.Default.MenuBook
+                            Icons.AutoMirrored.Filled.MenuBook
                         else
                             Icons.Default.Book,
                         contentDescription = if (book.alreadyRead) "Already read" else "Status: Not read",
