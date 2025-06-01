@@ -39,7 +39,6 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.readalready_mad_project.R
 import com.example.readalready_mad_project.ui.theme.CardGreen
@@ -235,7 +234,7 @@ fun BookCard(
 
                 if (config.showAuthors) {
                     Text(
-                        text = stringResource(id = R.string.author),
+                        text = stringResource(id = R.string.author_s),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary

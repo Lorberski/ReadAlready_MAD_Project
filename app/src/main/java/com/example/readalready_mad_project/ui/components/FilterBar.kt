@@ -17,7 +17,8 @@ import com.example.readalready_mad_project.states.FilterOptionBookState
 
 
 interface FilterOption {
-    val label: String
+    @Composable
+    fun label(): String
 }
 
 
@@ -32,7 +33,7 @@ fun <T> FilterBar(
 
     Box(modifier = Modifier.padding(8.dp)) {
         Button(onClick = { expanded = true }) {
-            Text("Filter: ${selected.label}")
+            Text("Filter: ${selected.label()}")
         }
         DropdownMenu(
             expanded = expanded,
@@ -40,7 +41,7 @@ fun <T> FilterBar(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.label) },
+                    text = { Text(option.label()) },
                     onClick = {
                         onFilterSelected(option)
                         expanded = false

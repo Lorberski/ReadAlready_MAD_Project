@@ -7,9 +7,13 @@
     <string name="filter_all">All</string>
     <string name="trending_books">Trending Books</string>
     <string name="book_details">Book Details</string>
-    <string name="author">Author(s)</string>
     <string name="status">Status</string>
     <string name="no_data">No data</string>
     <string name="already_read">Already Read</string>
     <string name="unread">Unread</string>
+    <string name="title">Title</string>
+    <string name="isbn">ISBN</string>
+    <string name="author_s">Author(s)</string>
+    <string name="author">Author</string>
+    <string name="search">Search..</string>
 </resources>
