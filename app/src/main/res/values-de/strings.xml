@@ -6,4 +6,10 @@
     <string name="search_books">Bücher suchen</string>
     <string name="filter_all">Alle</string>
     <string name="trending_books">Beliebte Bücher</string>
+    <string name="book_details">Buchdetails</string>
+    <string name="author">Autor(en)</string>
+    <string name="status">Status</string>
+    <string name="no_data">Keine Angabe</string>
+    <string name="already_read">Bereits gelesen</string>
+    <string name="unread">Noch nicht gelesen</string>
 </resources>

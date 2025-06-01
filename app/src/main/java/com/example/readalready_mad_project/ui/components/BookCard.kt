@@ -40,6 +40,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.readalready_mad_project.R
 import com.example.readalready_mad_project.ui.theme.CardGreen
 
 
@@ -222,7 +224,6 @@ fun BookCard(
                     .padding(start = 8.dp)
                     .fillMaxWidth()
             ) {
-                // Titel
                 if (config.showTitle) {
                     Text(
                         text = book.title,
@@ -232,16 +233,15 @@ fun BookCard(
                     )
                 }
 
-                // Autoren
                 if (config.showAuthors) {
                     Text(
-                        text = "Autor(en):",
+                        text = stringResource(id = R.string.author),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = book.authors?.joinToString(", ") ?: "Keine Angabe",
+                        text = book.authors?.joinToString(", ") ?: stringResource(id = R.string.no_data),
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -250,19 +250,18 @@ fun BookCard(
                 // Status
                 if (config.showStatus) {
                     Text(
-                        text = "Status:",
+                        text = stringResource(id = R.string.status),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = if (book.alreadyRead) "Bereits gelesen" else "Noch nicht gelesen",
+                        text = if (book.alreadyRead) stringResource(id = R.string.already_read) else stringResource(id = R.string.unread),
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
 
-                // Weitere Details (nur bei expanded)
                 if (!config.expandable || expanded) {
                     if (config.showPublisher) {
                         LabelAndValue("Verlag", book.publisher)
@@ -280,7 +279,6 @@ fun BookCard(
                         )
                     }
 
-                    // Beschreibung als Card
                     if (config.showDescription && !config.showDescriptionButton) {
                         Text(
                             text = "Beschreibung",
