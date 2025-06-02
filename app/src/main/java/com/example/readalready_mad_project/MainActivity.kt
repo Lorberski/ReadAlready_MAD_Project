@@ -23,21 +23,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.ui.res.stringResource
-import androidx.datastore.dataStore
 import com.example.readalready_mad_project.data.dataStore.AppTheme
 import com.example.readalready_mad_project.data.dataStore.ThemePreferences
-import com.example.readalready_mad_project.data.dataStore.dataStore
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.BookDetailScreenContent
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 import com.example.readalready_mad_project.ui.screens.SettingsScreenContent
-
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
-import com.example.readalready_mad_project.data.dataStore.dataStore
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
