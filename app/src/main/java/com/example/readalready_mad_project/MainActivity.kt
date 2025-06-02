@@ -26,11 +26,20 @@ import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.res.stringResource
+import androidx.datastore.dataStore
+import com.example.readalready_mad_project.data.dataStore.AppTheme
+import com.example.readalready_mad_project.data.dataStore.ThemePreferences
+import com.example.readalready_mad_project.data.dataStore.dataStore
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.BookDetailScreenContent
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 import com.example.readalready_mad_project.ui.screens.SettingsScreenContent
+
+import android.content.Context
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
+import com.example.readalready_mad_project.data.dataStore.dataStore
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,7 +49,17 @@ override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ReadAlreadyTheme {
+
+            val themeFlow = ThemePreferences.getSavedTheme(applicationContext)
+            val theme by themeFlow.collectAsState(initial = AppTheme.System)
+            
+            ReadAlreadyTheme(
+                darkTheme = when(theme){
+                    is AppTheme.Light -> false
+                    is AppTheme.Dark  -> true
+                    is AppTheme.System -> isSystemInDarkTheme()
+                }
+            ) {
                 BottomNavigationBarApp()
             }
         }
