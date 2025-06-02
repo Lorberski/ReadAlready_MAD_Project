@@ -44,13 +44,16 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val themeFlow = ThemePreferences.getSavedTheme(applicationContext)
-            val theme by themeFlow.collectAsState(initial = AppTheme.System)
+            val theme by themeFlow.collectAsState(initial = themeFlow)
 
             ReadAlreadyTheme(
                 darkTheme = when(theme){
                     is AppTheme.Light -> false
                     is AppTheme.Dark  -> true
                     is AppTheme.System -> isSystemInDarkTheme()
+                    else -> {
+                        isSystemInDarkTheme()
+                    }
                 }
             ) {
                 BottomNavigationBarApp()

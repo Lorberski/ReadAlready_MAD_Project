@@ -26,24 +26,29 @@ fun SettingsScreenContent(){
 }
 
 @Composable
-fun MainContent(){
+fun MainContent() {
     val context = LocalContext.current
     val themeFlow = remember { ThemePreferences.getSavedTheme(context) }
-    val currentTheme by themeFlow.collectAsState(initial = AppTheme.System)
+    val currentTheme by themeFlow.collectAsState(initial = null)
 
     var expanded by remember { mutableStateOf(false) }
 
     val themeOptions = listOf(AppTheme.Light, AppTheme.Dark, AppTheme.System)
 
-    var selectedTheme by remember { mutableStateOf(currentTheme) }
-
-    // Save to DataStore when selection changes
-    LaunchedEffect(selectedTheme) {
-        ThemePreferences.saveTheme(context, selectedTheme)
+    var selectedTheme by remember(currentTheme) {
+        mutableStateOf(currentTheme ?: AppTheme.System)
     }
 
+    LaunchedEffect(selectedTheme) {
+        if (currentTheme != null && selectedTheme != currentTheme) {
+            ThemePreferences.saveTheme(context, selectedTheme)
+        }
+    }
+
+    if (currentTheme == null) return
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Select Theme", style = MaterialTheme.typography.titleLarge)
+        Text(text = "Design auswählen", style = MaterialTheme.typography.titleLarge)
 
         Box {
             OutlinedButton(onClick = { expanded = true }) {
