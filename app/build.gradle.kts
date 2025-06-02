@@ -104,7 +104,6 @@ dependencies {
 // OkHttp Logging (for API debugging)
     implementation(libs.okhttp.logging)
     implementation(libs.coil.compose.v240)
-
-
+    implementation (libs.androidx.datastore.preferences)
 
 }

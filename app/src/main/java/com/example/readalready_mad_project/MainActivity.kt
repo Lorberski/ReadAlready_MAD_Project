@@ -17,7 +17,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
+import dagger.hilt.android.AndroidEntryPoint
+import com.example.readalready_mad_project.data.dataStore.AppTheme
+import com.example.readalready_mad_project.data.dataStore.ThemePreferences
 import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.BookDetailScreenContent
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
@@ -32,13 +39,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ReadAlreadyTheme {
+
+            val themeFlow = ThemePreferences.getSavedTheme(applicationContext)
+            val theme by themeFlow.collectAsState(initial = AppTheme.System)
+
+            ReadAlreadyTheme(
+                darkTheme = when(theme){
+                    is AppTheme.Light -> false
+                    is AppTheme.Dark  -> true
+                    is AppTheme.System -> isSystemInDarkTheme()
+                }
+            ) {
                 BottomNavigationBarApp()
             }
         }
     }
 }
 
+// Hilfsfunktion zum Speichern der letzten Route
 fun saveLastRoute(context: Context, route: String) {
     context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         .edit {
@@ -121,10 +139,8 @@ fun BottomNavigationBarApp() {
                 saveLastRoute(context, Navigation.SearchScreen.route)
                 SearchScreenContent(navController)
             }
-
             composable(Navigation.SettingsScreen.route) {
-                saveLastRoute(context, Navigation.SettingsScreen.route)
-                // TODO: SettingsScreenContent(navController)
+                SettingsScreenContent()
             }
 
             composable("book_detail/{bookId}") { backStackEntry ->
