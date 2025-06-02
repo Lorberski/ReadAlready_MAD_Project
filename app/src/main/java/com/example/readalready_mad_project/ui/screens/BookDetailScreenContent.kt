@@ -43,7 +43,8 @@ fun BookDetailScreenContent(bookId: String, navController: NavHostController) {
         onStartEditing = { viewModel.startEditingNotes() },
         onStopEditing = { viewModel.stopEditingNotes() },
         onBackButton = {
-            navController.navigate(Navigation.BooksScreen.route)
+            /*navController.navigate(Navigation.BooksScreen.route)*/
+            navController.popBackStack()
         },
         viewModel = viewModel,
     )
@@ -65,8 +66,6 @@ fun MainContent(
     onBackButton: () -> Unit
 
 ) {
-    val viewModel: BookDetailViewModel = hiltViewModel()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -112,7 +111,7 @@ fun MainContent(
                             repositoryNotesToggleFunction = { viewModel.toggleNotesEditor() },
                             onClick = null,
                             configBuilder = {
-                                notExpandable()
+                                expandable()
                                 withStatus()
                                 withDeleteSymbol()
                                 withAlreadyReadButton()
