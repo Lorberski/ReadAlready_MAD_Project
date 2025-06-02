@@ -16,4 +16,5 @@
     <string name="author">Author</string>
     <string name="search">Search..</string>
     <string name="search_by">Search by</string>
+    <string name="select_theme">Select Theme</string>
 </resources>

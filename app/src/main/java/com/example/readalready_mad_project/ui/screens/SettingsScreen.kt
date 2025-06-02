@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.example.readalready_mad_project.data.dataStore.AppTheme
 import com.example.readalready_mad_project.data.dataStore.ThemePreferences
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import com.example.readalready_mad_project.R
+
 
 @Composable
 fun SettingsScreenContent(){
@@ -48,7 +51,7 @@ fun MainContent() {
     if (currentTheme == null) return
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Design auswählen", style = MaterialTheme.typography.titleLarge)
+        Text(text = stringResource(id = R.string.select_theme), style = MaterialTheme.typography.titleLarge)
 
         Box {
             OutlinedButton(onClick = { expanded = true }) {

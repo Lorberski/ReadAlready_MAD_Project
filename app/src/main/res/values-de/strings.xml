@@ -17,4 +17,5 @@
     <string name="author">Autor:in</string>
     <string name="search">Suche..</string>
     <string name="search_by">Suche nach</string>
+    <string name="select_theme">Design auswählen</string>
 </resources>
