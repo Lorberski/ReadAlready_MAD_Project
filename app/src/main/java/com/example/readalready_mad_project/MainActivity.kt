@@ -30,12 +30,13 @@ import com.example.readalready_mad_project.ui.Navigation
 import com.example.readalready_mad_project.ui.screens.BookDetailScreenContent
 import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
+import com.example.readalready_mad_project.ui.screens.SettingsScreenContent
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -108,10 +109,10 @@ fun BottomNavigationBarApp() {
                 BooksScreenContent(navController)
             }
             composable(Navigation.SearchScreen.route) {
-            SearchScreenContent(navController)
+                SearchScreenContent(navController)
             }
             composable(Navigation.SettingsScreen.route) {
-                /* TODO: SettingsScreen() */
+                SettingsScreenContent()
             }
             composable("book_detail/{bookId}") { backStackEntry ->
                 val bookId = backStackEntry.arguments?.getString("bookId")
