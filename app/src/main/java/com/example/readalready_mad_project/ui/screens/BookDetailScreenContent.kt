@@ -65,8 +65,6 @@ fun MainContent(
     onBackButton: () -> Unit
 
 ) {
-    val viewModel: BookDetailViewModel = hiltViewModel()
-
     Scaffold(
         topBar = {
             TopAppBar(

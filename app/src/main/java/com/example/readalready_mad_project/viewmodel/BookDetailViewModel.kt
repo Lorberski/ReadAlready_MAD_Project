@@ -88,6 +88,9 @@ class BookDetailViewModel @Inject constructor(
             try {
                 val book = repository.getBookById(bookId)
                 _state.update { it.copy(book = book, isLoading = false) }
+                if (book != null) {
+                    _notesInput.value = book.notes ?: ""
+                }
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message, isLoading = false) }
             }
