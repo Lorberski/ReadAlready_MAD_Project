@@ -24,6 +24,7 @@ import com.example.readalready_mad_project.ui.screens.BooksScreenContent
 import com.example.readalready_mad_project.ui.screens.SearchScreenContent
 import com.example.readalready_mad_project.ui.theme.ReadAlreadyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.content.edit
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,12 +39,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Hilfsfunktion zum Speichern der letzten Route
 fun saveLastRoute(context: Context, route: String) {
     context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        .edit()
-        .putString("last_route", route)
-        .apply()
+        .edit {
+            putString("last_route", route)
+        }
 }
 
 @Composable
