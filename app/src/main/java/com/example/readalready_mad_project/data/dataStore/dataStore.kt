@@ -11,9 +11,9 @@ val Context.dataStore by preferencesDataStore(name = "Settings")
 
 
 sealed class AppTheme(val name: String){
-    object Light: AppTheme("light")
-    object  Dark: AppTheme("dark")
-    object System: AppTheme("System")
+    data object Light: AppTheme("LIGHT")
+    data object  Dark: AppTheme("DARK")
+    data object System: AppTheme("SYSTEM")
 
     companion object {
         fun forName(name: String): AppTheme = when (name){

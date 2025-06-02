@@ -75,8 +75,9 @@ fun SearchScreenContent(navController: NavController){
         FilterBar(
             selected = state.filter,
             onFilterSelected = viewModel::onSearchFilterChanged,
-            options = FilterOptionSearchState.entries.toTypedArray()
-        )
+            options = FilterOptionSearchState.entries.toTypedArray(),
+            filterTitleText =
+                (stringResource(id = R.string.search_by))        )
 
         if (state.firstSearch){
             Text(

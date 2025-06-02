@@ -67,7 +67,8 @@ fun MainContent(
             FilterBar(
                 selected = selectedFilter,
                 onFilterSelected = onFilterChange,
-                options = FilterOptionBookState.entries.toTypedArray()
+                options = FilterOptionBookState.entries.toTypedArray(),
+                filterTitleText = "Filter"
             )
 
             LazyColumn(state = listState) {

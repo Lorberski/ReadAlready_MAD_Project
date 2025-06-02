@@ -26,13 +26,14 @@ interface FilterOption {
 fun <T> FilterBar(
     selected: T,
     onFilterSelected: (T) -> Unit,
-    options: Array<T>
+    options: Array<T>,
+    filterTitleText: String
 ) where T : Enum<T>, T : FilterOption {
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.padding(8.dp)) {
         Button(onClick = { expanded = true }) {
-            Text("Filter: ${selected.label()}")
+            Text("$filterTitleText: ${selected.label()}")
         }
         DropdownMenu(
             expanded = expanded,

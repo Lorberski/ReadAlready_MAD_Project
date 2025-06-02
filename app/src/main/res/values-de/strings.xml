@@ -16,4 +16,5 @@
     <string name="author_s">Autor:innen</string>
     <string name="author">Autor:in</string>
     <string name="search">Suche..</string>
+    <string name="search_by">Suche nach</string>
 </resources>
